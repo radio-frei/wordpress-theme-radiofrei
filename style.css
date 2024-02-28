@@ -1,0 +1,54 @@
+/*
+Theme Name: Radio F.R.E.I.
+Theme URI: https://github.com/radio-frei/wordpress-theme-radio-frei
+Author: Freies Radio Erfurt e.V.
+Author URI: https://www.radio-frei.de
+Description: 
+Requires at least: 6.0
+Tested up to: 6.4.3
+Requires PHP: 5.7
+Version: 1.0.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: radiofrei
+Tags: one-column, wide-blocks, custom-colors, custom-menu, custom-logo, editor-style, featured-images, full-site-editing, block-patterns, rtl-language-support, sticky-post, threaded-comments, translation-ready, block-styles, style-variations, accessibility-ready, blog, portfolio, news
+*/
+
+/* sticky player */
+main {
+    position: absolute;
+    width: 100%;
+    max-height: calc(100vh - 154px);
+    min-height: calc(100vh - 154px);
+    overflow-y: auto;
+}
+
+footer {
+    position: fixed;
+    width: 100%;
+    height: 90px;
+    bottom: 0px;
+}
+
+.rf-startseite {
+    background-image: url('assets/images/background4.webp');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
+}
+
+@media only screen and (min-width: 1152px) {
+    main::-webkit-scrollbar {
+        width: 12px;
+    }
+
+    main::-webkit-scrollbar-thumb {
+        background-color: #909090;
+    }
+
+    main::-webkit-scrollbar-track {
+        background-color: #e8e8e8;
+    }
+}
+
