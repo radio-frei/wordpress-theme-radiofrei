@@ -256,10 +256,8 @@ function rf_log($data)
  * Includes
  */
 
-// include funktionen startseite
-include('includes/startseite.php');
-
 // include funktionen programmschema
 include('includes/wochenprogramm.php');
 
-
+// include funktion ersetzen audio tags durch audio buttons
+include('includes/rf-audio-buttons.php');
