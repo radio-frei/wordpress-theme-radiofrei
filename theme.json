@@ -318,29 +318,6 @@
 							"slug": "body"
 						},
 						{
-							"fontFace": [
-								{
-									"fontFamily": "Instrument Sans",
-									"fontStyle": "normal",
-									"fontWeight": "400 700",
-									"src": [
-										"file:./assets/fonts/instrument-sans/InstrumentSans-VariableFont_wdth,wght.woff2"
-									]
-								},
-								{
-									"fontFamily": "Instrument Sans",
-									"fontStyle": "italic",
-									"fontWeight": "400 700",
-									"src": [
-										"file:./assets/fonts/instrument-sans/InstrumentSans-Italic-VariableFont_wdth,wght.woff2"
-									]
-								}
-							],
-							"fontFamily": "\"Instrument Sans\", sans-serif",
-							"name": "Instrument Sans",
-							"slug": "instrument-sans"
-						},
-						{
 							"fontFamily": "-apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif",
 							"name": "System Sans-serif",
 							"slug": "system-sans-serif"
@@ -646,29 +623,6 @@
 					"fontFamily": "\"Inter\", sans-serif",
 					"name": "Inter",
 					"slug": "body"
-				},
-				{
-					"fontFace": [
-						{
-							"fontFamily": "Instrument Sans",
-							"fontStyle": "normal",
-							"fontWeight": "400 700",
-							"src": [
-								"file:./assets/fonts/instrument-sans/InstrumentSans-VariableFont_wdth,wght.woff2"
-							]
-						},
-						{
-							"fontFamily": "Instrument Sans",
-							"fontStyle": "italic",
-							"fontWeight": "400 700",
-							"src": [
-								"file:./assets/fonts/instrument-sans/InstrumentSans-Italic-VariableFont_wdth,wght.woff2"
-							]
-						}
-					],
-					"fontFamily": "\"Instrument Sans\", sans-serif",
-					"name": "Instrument Sans",
-					"slug": "instrument-sans"
 				},
 				{
 					"fontFamily": "-apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif",

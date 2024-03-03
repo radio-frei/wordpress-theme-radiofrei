@@ -224,8 +224,8 @@ function radiofrei_styles()
 
 
 
-/* Disable WordPress Admin Bar on frontend for all users */
-//add_filter('show_admin_bar', '__return_false');
+/* Disable WordPress Admin Bar on frontend */
+add_filter('show_admin_bar', '__return_false');
 
 
 /**
