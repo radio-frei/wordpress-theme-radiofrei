@@ -73,7 +73,7 @@ function rf_get_block_content_for_button($audio_id)
     $src = wp_get_attachment_url($audio_id);
     $title = get_the_title();
     $url = get_permalink();
-    $img = get_the_post_thumbnail_url();
+    $img = get_the_post_thumbnail_url(get_the_ID(), 'thumbnail');
     $length = wp_get_attachment_metadata($audio_id)['length_formatted'];
     return rf_create_audio_button($src, $title, $url, $img, $length);
 }
