@@ -1130,9 +1130,17 @@
 					"width": "0 0 1px 0"
 				},
 				"color": {
+					"background": "var(--wp--preset--color--contrast-3)",
 					"text": "var(--wp--preset--color--contrast)"
 				},
-				"css": " &:not(.is-style-wide):not(.is-style-dots):not(.alignwide):not(.alignfull){width: var(--wp--preset--spacing--60)}"
+				"css": " &:not(.is-style-wide):not(.is-style-dots):not(.alignwide):not(.alignfull){width: var(--wp--preset--spacing--60)}",
+				"variations": {
+					"wide": {
+						"color": {
+							"background": "var(--wp--preset--color--contrast-2)"
+						}
+					}
+				}
 			},
 			"core/site-tagline": {
 				"color": {
@@ -1167,7 +1175,7 @@
 			"background": "var(--wp--preset--color--custom-rf-blau)",
 			"text": "var(--wp--preset--color--base-2)"
 		},
-		"css": "",
+		"css": ".wp-block-table.is-style-stripes tbody tr:nth-child(odd) {\n    background-color: #1f363ce6;\n}",
 		"elements": {
 			"button": {
 				":active": {
