@@ -8,15 +8,12 @@
  * 
  */
 
-
-
 /**
  * Mit post id in post_content nach audio tags suchen, wenn audio gefunden:
  * button data attributes mit länge und url etc. geben, die dann von js für
  * player verwendet werden (siehe dlf audio buttons)
  * 
  */
-add_filter('render_block_core/button', 'rf_add_audio_data_to_button', 10, 2);
 function rf_add_audio_data_to_button($block_content, $block)
 {
     // nur buttons mit class rf-audio-button ändern
@@ -42,7 +39,12 @@ function rf_add_audio_data_to_button($block_content, $block)
     }
     return $block_content;
 }
+add_filter('render_block_core/button', 'rf_add_audio_data_to_button', 10, 2);
 
+
+/**
+ * helper, suche ersten audio block recursiv
+ */
 function rf_find_first_audio_block($blocks)
 {
     foreach ($blocks as $block) {
@@ -55,19 +57,27 @@ function rf_find_first_audio_block($blocks)
     return false;
 }
 
-// in allen audio blöcken audio tags durch audio buttons ersetzen
-add_filter('render_block_core/audio', 'rf_replace_audio_with_button', 10, 2);
+
+/**
+ * in allen audio blöcken audio tags durch audio buttons ersetzen
+ */
 function rf_replace_audio_with_button($block_content, $block)
 {
-    // wenn audio datei zugewiesen ist, ermittle src, länge und titel und ersetze durch audio button
-    if (isset($block['attrs']['id'])) {
-        $id = $block['attrs']['id'];
-        $block_content = rf_get_block_content_for_button($id);
+    if (!is_admin()) {
+        // wenn audio datei zugewiesen ist, ermittle src, länge und titel und ersetze durch audio button
+        if (isset($block['attrs']['id'])) {
+            $id = $block['attrs']['id'];
+            $block_content = rf_get_block_content_for_button($id);
+        }
     }
     return $block_content;
 }
+add_filter('render_block_core/audio', 'rf_replace_audio_with_button', 10, 2);
 
-// daten für audio button ermitteln
+
+/**
+ * daten für audio button ermitteln
+ */
 function rf_get_block_content_for_button($audio_id)
 {
     $src = wp_get_attachment_url($audio_id);
@@ -78,7 +88,10 @@ function rf_get_block_content_for_button($audio_id)
     return rf_create_audio_button($src, $title, $url, $img, $length);
 }
 
-// einen audio button erstellen
+
+/**
+ * einen audio button erstellen
+ */
 function rf_create_audio_button($src, $title, $url, $img, $length)
 {
     $html =

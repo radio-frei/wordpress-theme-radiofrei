@@ -12,7 +12,6 @@
 /**
  * Register block styles.
  */
-add_action('init', 'radiofrei_block_styles');
 function radiofrei_block_styles()
 {
 
@@ -137,6 +136,7 @@ function radiofrei_block_styles()
 		)
 	);
 }
+add_action('init', 'radiofrei_block_styles');
 
 
 /**
@@ -145,7 +145,6 @@ function radiofrei_block_styles()
  * @since Radio F.R.E.I. 1.0
  * @return void
  */
-add_action('init', 'radiofrei_block_stylesheets');
 function radiofrei_block_stylesheets()
 {
 	/**
@@ -166,6 +165,7 @@ function radiofrei_block_stylesheets()
 		)
 	);
 }
+add_action('init', 'radiofrei_block_stylesheets');
 
 
 /**
@@ -174,7 +174,6 @@ function radiofrei_block_stylesheets()
  * @since Radio F.R.E.I. 1.0
  * @return void
  */
-add_action('init', 'radiofrei_pattern_categories');
 function radiofrei_pattern_categories()
 {
 
@@ -186,6 +185,7 @@ function radiofrei_pattern_categories()
 		)
 	);
 }
+add_action('init', 'radiofrei_pattern_categories');
 
 
 /**
@@ -193,71 +193,53 @@ function radiofrei_pattern_categories()
  *
  * @return void
  */
-add_action('after_setup_theme', 'radiofrei_support');
 function radiofrei_support()
 {
 	// Enqueue editor styles.
 	add_editor_style('style.css');
 }
+add_action('after_setup_theme', 'radiofrei_support');
+
 
 /**
- * unterstützung style.css
+ * Radio F.R.E.I. enqueue scripts and styles
  *
  * @return void
  */
-add_action('wp_enqueue_scripts', 'radiofrei_styles');
-function radiofrei_styles()
+
+function radiofrei_scripts_styles()
 {
-
 	// Register theme stylesheet.
-	wp_register_style(
-		'radiofrei-style',
-		get_template_directory_uri() . '/style.css',
-		array(),
-		wp_get_theme()->get('Version')
-	);
-
+	wp_register_style('radiofrei-style', get_template_directory_uri() . '/style.css', array(), wp_get_theme()->get('Version'));
 	// Enqueue theme stylesheet.
 	wp_enqueue_style('radiofrei-style');
-}
 
+	if (is_page('sendungen-a-z')) {
+		wp_enqueue_script('rf-filter-sendereihe', get_theme_file_uri('assets/js/rf-filter-sendereihe.js'), array(), '1.0', true);
+	}
 
-
-
-/* Disable WordPress Admin Bar on frontend */
-add_filter('show_admin_bar', '__return_false');
-
-
-/**
- * Allows shortcodes to evaluate special magic tags which appear like magic tags,
- * but the values are mapped through pods_v(). Use this with caution.
- */
-define('PODS_SHORTCODE_ALLOW_EVALUATE_TAGS', true);
-
-
-/**
- * Hilfsfunktionen
- */
-
-function rf_log($data)
-{
-	if (true === WP_DEBUG) {
-		if (is_array($data) || is_object($data)) {
-			error_log(print_r($data, true));
-		} else {
-			if (!empty($data)) {
-				error_log($data);
-			}
-		}
+	if (is_page('wochenprogramm')) {
+		wp_enqueue_script('jquery-ui-datepicker');
+		wp_enqueue_style('jquery-ui-datepicker-style', 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.1/themes/base/jquery-ui.css');
+		wp_enqueue_script('rf-datepicker', get_theme_file_uri('assets/js/rf-datepicker.js'), array('jquery', 'jquery-ui-datepicker'), '1.0', true);
 	}
 }
+add_action('wp_enqueue_scripts', 'radiofrei_scripts_styles');
+
 
 /*
- * Includes
+ * Radio F.R.E.I. includes
+ * Reihenfolge beachten!
  */
 
-// include funktionen programmschema
-include('includes/wochenprogramm.php');
+// taxonomy box für sendereihen
+include('lib/taxonomy_single_term/class.taxonomy-single-term.php');
 
-// include funktion ersetzen audio tags durch audio buttons
+// include hilfsfunktionen
+include('includes/rf-helpers.php');
+
+// include backend funktionen
+include('includes/rf-backend.php');
+
+// include funktionen für das ersetzen von audio tags durch audio buttons
 include('includes/rf-audio-buttons.php');
