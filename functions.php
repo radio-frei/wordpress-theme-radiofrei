@@ -214,6 +214,8 @@ function radiofrei_scripts_styles()
 	// Enqueue theme stylesheet.
 	wp_enqueue_style('radiofrei-style');
 
+	wp_enqueue_script('rf-audioplayer', get_theme_file_uri('assets/js/rf-audioplayer.js'), array(), '1.0', true);
+
 	if (is_page('sendungen-a-z')) {
 		wp_enqueue_script('rf-filter-sendereihe', get_theme_file_uri('assets/js/rf-filter-sendereihe.js'), array(), '1.0', true);
 	}
