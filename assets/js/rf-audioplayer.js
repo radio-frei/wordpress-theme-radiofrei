@@ -4,6 +4,7 @@
 
 const maxTitle = 55;
 let isPlaying = false;
+let isOpen = false;
 
 const audio = document.querySelector('.rf-play-audio');
 const playButton = document.querySelector('.rf-play-button');
@@ -15,12 +16,15 @@ const currentTime = document.querySelector('.rf-play-current');
 const durationTime = document.querySelector('.rf-play-duration');
 const rangeSlider = document.querySelector('.rf-play-range');
 const silderContainer = document.querySelector('.rf-slider');
+const menuButton = document.querySelector('.rf-play-menu-button');
+const footer = document.querySelector('footer');
 
 playButton.classList.add('rf-disabled');
 currentTime.classList.add('rf-disabled');
 durationTime.classList.add('rf-disabled');
 silderContainer.classList.add('rf-disabled');
-
+menuButton.classList.add('rf-disabled');
+//menuButton.style.display = 'none';
 
 playImage.removeAttribute('srcset');
 playTitle.textContent = '';
@@ -102,6 +106,8 @@ audio.addEventListener('loadeddata', () => {
     playButton.classList.remove('rf-disabled');
     currentTime.classList.remove('rf-disabled');
     durationTime.classList.remove('rf-disabled');
+    menuButton.classList.remove('rf-disabled');
+    //menuButton.style.display = 'inline-block';
     if (audio.duration !== Infinity) {
         silderContainer.classList.remove('rf-disabled');
     }
@@ -128,9 +134,23 @@ audio.addEventListener('emptied', () => {
     currentTime.classList.add('rf-disabled');
     durationTime.classList.add('rf-disabled');
     silderContainer.classList.add('rf-disabled');
+    menuButton.classList.add('rf-disabled');
     currentTime.textContent = '00:00';
     durationTime.textContent = '00:00';
     setRangeSlider(0);
 });
 
 
+menuButton.addEventListener('click', () => {
+    if (isOpen) {
+        footer.style.height = "90px";
+        isOpen = false;
+        menuButton.querySelector('a').textContent = 'mehr';
+        menuButton.classList.remove('rf-play-menu-open');
+    } else {
+        footer.style.height = "180px";
+        isOpen = true;
+        menuButton.querySelector('a').textContent = 'weniger';
+        menuButton.classList.add('rf-play-menu-open');
+    }
+});

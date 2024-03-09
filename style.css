@@ -53,9 +53,14 @@ footer {
 }
 
 @media (max-width: 600px) {
-    .rf-play-right-col {
+    .rf-play-title {
         display: none;
     }
+}
+
+.rf-disabled {
+    pointer-events: none;
+    opacity: 0.4;
 }
 
 .rf-play-img {
@@ -66,9 +71,19 @@ footer {
     content: url('assets/images/pause.webp');
 }
 
-.rf-disabled {
-    pointer-events: none;
-    opacity: 0.4;
+.rf-play-menu-button::before {
+    content: "";
+    display: block;
+    width: 1.2rem;
+    height: .3rem;
+    margin: auto;
+    background-position: center;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='7' viewBox='0 0 16 7'%3E%3Cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-width='2' d='M1 1L8 5 15 1' transform='matrix(1 0 0 -1 0 7)'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+}
+
+.rf-play-menu-open::before {
+    rotate: 180deg;
 }
 
 
@@ -118,11 +133,4 @@ input[type="range"]::-moz-range-thumb {
     width: 12px;
     height: 12px;
 }
-
-
-
-
-
-
-
 
