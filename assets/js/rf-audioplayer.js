@@ -3,6 +3,7 @@
  */
 
 const maxTitle = 55;
+let isPlaying = false;
 
 const audio = document.querySelector('.rf-play-audio');
 const playButton = document.querySelector('.rf-play-button');
@@ -13,13 +14,21 @@ const playTitle = document.querySelector('.rf-play-title').querySelector('a');
 const currentTime = document.querySelector('.rf-play-current');
 const durationTime = document.querySelector('.rf-play-duration');
 const rangeSlider = document.querySelector('.rf-play-range');
+const silderContainer = document.querySelector('.rf-slider');
 
-let isPlaying = false;
+playButton.classList.add('rf-disabled');
+currentTime.classList.add('rf-disabled');
+durationTime.classList.add('rf-disabled');
+silderContainer.classList.add('rf-disabled');
+
+
+playImage.removeAttribute('srcset');
+playTitle.textContent = '';
 
 
 function playItem(event) {
 
-    playTitle.textContent = 'lade...';
+    playButton.classList.remove('rf-playing');
 
     // get data
     const src = event.target.getAttribute('data-src');
@@ -27,9 +36,11 @@ function playItem(event) {
     const url = event.target.getAttribute('data-url');
     const img = event.target.getAttribute('data-img');
 
-    if (title.length > maxTitle) {
-        title = title.substring(0, maxTitle) + '...';
-    }
+    //early feedback
+    playImage.src = img;
+    playImageLink.href = url;
+    playTitle.textContent = 'lade...';
+    playTitle.href = url;
 
     return new Promise((resolve, reject) => {
         audio.src = src;
@@ -37,18 +48,11 @@ function playItem(event) {
             .play()
             .then(() => {
                 isPlaying = true;
-
-                // set data to elements
-                playImage.src = img;
-                playImage.srcset = '';
-                playImageLink.href = url;
+                if (title.length > maxTitle) {
+                    title = title.substring(0, maxTitle) + '...';
+                }
                 playTitle.textContent = title;
-                playTitle.href = url;
-
-                //playButton.textContent = 'Pause';
-                playButton.disabled = false;
-                rangeSlider.disabled = false;
-
+                playButton.classList.add('rf-playing');
                 resolve();
             })
             .catch((error) => {
@@ -57,32 +61,33 @@ function playItem(event) {
     });
 }
 
-function updateTimeDisplay() {
-    currentTime.textContent = formatTime(audio.currentTime);
-    const value = (audio.currentTime / audio.duration) * 100;
-    rangeSlider.value = value;
-    drawRangeProgress(value);
-}
-
 function drawRangeProgress(value) {
     rangeSlider.style.background = `linear-gradient(to right, #fff ${value}%, #4d4d4d ${value}%)`;
 }
 
+function setRangeSlider(value) {
+    rangeSlider.value = value;
+    drawRangeProgress(value);
+}
+
 function formatTime(seconds) {
+    if (seconds === Infinity) {
+        return 'Live';
+    }
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = Math.floor(seconds % 60);
-    return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
+    return `${minutes < 10 ? "0" : ""}${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
 }
 
 playButton.addEventListener('click', () => {
     if (isPlaying) {
         audio.pause();
         isPlaying = false;
-        //playButton.textContent = 'Play';
+        playButton.classList.remove('rf-playing');
     } else {
         audio.play();
         isPlaying = true;
-        //playButton.textContent = 'Pause';
+        playButton.classList.add('rf-playing');
     }
 });
 
@@ -93,29 +98,39 @@ rangeSlider.addEventListener('input', () => {
     audio.currentTime = seekTime;
 });
 
+audio.addEventListener('loadeddata', () => {
+    playButton.classList.remove('rf-disabled');
+    currentTime.classList.remove('rf-disabled');
+    durationTime.classList.remove('rf-disabled');
+    if (audio.duration !== Infinity) {
+        silderContainer.classList.remove('rf-disabled');
+    }
+    durationTime.textContent = formatTime(audio.duration);
+});
+
 audio.addEventListener('timeupdate', () => {
-    updateTimeDisplay();
+    currentTime.textContent = formatTime(audio.currentTime);
+    if (!silderContainer.classList.contains('rf-disabled')) {
+        const value = (audio.currentTime / audio.duration) * 100;
+        setRangeSlider(value);
+    }
 });
 
 audio.addEventListener('ended', () => {
     isPlaying = false;
-    //playButton.textContent = 'Play';
+    playButton.classList.remove('rf-playing');
     currentTime.textContent = '00:00';
-    rangeSlider.value = 0;
-    drawRangeProgress(0);
-});
-
-audio.addEventListener('loadeddata', () => {
-    playButton.disabled = false;
-    durationTime.textContent = formatTime(audio.duration);
+    setRangeSlider(0);
 });
 
 audio.addEventListener('emptied', () => {
-    playButton.disabled = true;
+    playButton.classList.add('rf-disabled');
+    currentTime.classList.add('rf-disabled');
+    durationTime.classList.add('rf-disabled');
+    silderContainer.classList.add('rf-disabled');
     currentTime.textContent = '00:00';
     durationTime.textContent = '00:00';
-    rangeSlider.value = 0;
-    drawRangeProgress(0);
+    setRangeSlider(0);
 });
 
 

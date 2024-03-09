@@ -3,9 +3,9 @@
 /**
  * Radio F.R.E.I.
  * 
- * Füge startseiten beiträgen, die audio enthalten, audio buttons hinzu
- * Ersetze audio tags durch audio buttons
- * 
+ * - füge startseiten beiträgen, die audio enthalten, audio buttons hinzu
+ * - ersetze audio tags durch audio buttons
+ * - live button
  */
 
 /**
@@ -14,8 +14,16 @@
  * player verwendet werden (siehe dlf audio buttons)
  * 
  */
+
 function rf_add_audio_data_to_button($block_content, $block)
 {
+
+    $live_src = 'https://streaming.fueralle.org/Radio-F.R.E.I';
+    $live_title = 'Radio F.R.E.I. Live';
+    $live_url = get_home_url();
+    $live_img = get_theme_file_uri('assets/images/live.webp');
+    $live_caption = '● Live';
+
     // nur buttons mit class rf-audio-button ändern
     if (!is_admin() && !empty($block['attrs']['className']) && strpos($block['attrs']['className'], 'rf-audio-button') !== false) {
 
@@ -36,6 +44,8 @@ function rf_add_audio_data_to_button($block_content, $block)
             // kein audio block in beitrag, button ausblenden
             $block_content = '';
         }
+    } elseif (!is_admin() && !empty($block['attrs']['className']) && strpos($block['attrs']['className'], 'rf-live-button') !== false) {
+        $block_content = rf_create_audio_button($live_src, $live_title, $live_url, $live_img, $live_caption);
     }
     return $block_content;
 }
@@ -84,20 +94,20 @@ function rf_get_block_content_for_button($audio_id)
     $title = get_the_title();
     $url = get_permalink();
     $img = get_the_post_thumbnail_url(get_the_ID(), 'thumbnail');
-    $length = wp_get_attachment_metadata($audio_id)['length_formatted'];
-    return rf_create_audio_button($src, $title, $url, $img, $length);
+    $caption = '▶ Hören ' . wp_get_attachment_metadata($audio_id)['length_formatted'];
+    return rf_create_audio_button($src, $title, $url, $img, $caption);
 }
 
 
 /**
  * einen audio button erstellen
  */
-function rf_create_audio_button($src, $title, $url, $img, $length)
+function rf_create_audio_button($src, $title, $url, $img, $caption)
 {
     $html =
         '<div class="wp-block-buttons is-content-justification-left is-layout-flex wp-block-buttons-is-layout-flex">
             <div class="wp-block-button is-style-fill">
-                <div onclick="playItem(event)" data-src="' . $src . '" data-title="' . esc_html($title) . '" data-url="' . $url . '" data-img="' . $img . '" class="wp-block-button__link wp-element-button" style="border-radius:19px;padding-top:4px;padding-right:12px;padding-bottom:4px;padding-left:12px">▶ Hören ' . $length . '</div>
+                <div onclick="playItem(event)" data-src="' . $src . '" data-title="' . esc_html($title) . '" data-url="' . $url . '" data-img="' . $img . '" class="wp-block-button__link wp-element-button" style="border-radius:19px;padding-top:4px;padding-right:12px;padding-bottom:4px;padding-left:12px">' . $caption . '</div>
             </div>
         </div>';
     return $html;

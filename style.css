@@ -62,19 +62,35 @@ footer {
     min-width: 46px;
 }
 
+.rf-playing>a>img {
+    content: url('assets/images/pause.webp');
+}
 
-/* slider style 
-*/
+.rf-disabled {
+    pointer-events: none;
+    opacity: 0.4;
+}
 
-input[type='range'] {
+
+/* 
+ * play range slider 
+ */
+
+.rf-slider {
+    width: 100%;
+}
+
+input[type="range"] {
     -webkit-appearance: none;
     -moz-appearance: none;
+    height: 4px;
     border-radius: 16px;
+    width: 100%;
     background: #4d4d4d;
     cursor: pointer;
 }
 
-input[type='range']::-webkit-slider-thumb {
+input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
     width: 0;
@@ -86,20 +102,27 @@ input[type='range']::-webkit-slider-thumb {
 
 input[type="range"]::-moz-range-thumb {
     -moz-appearance: none;
-    width: 0;    
+    width: 0;
     height: 0;
     background-color: #fff;
     border-radius: 50%;
     border: none;
 }
 
-#rf-slider:hover input[type='range']::-webkit-slider-thumb {
+.rf-slider:hover input[type="range"]::-webkit-slider-thumb {
     width: 12px;
     height: 12px;
 }
 
-#rf-slider:hover input[type='range']::-moz-range-thumb {
+.rf-slider:hover input[type="range"]::-moz-range-thumb {
     width: 12px;
     height: 12px;
 }
+
+
+
+
+
+
+
 
