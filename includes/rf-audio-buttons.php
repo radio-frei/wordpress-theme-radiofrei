@@ -104,9 +104,11 @@ function rf_get_block_content_for_button($audio_id)
  */
 function rf_create_audio_button($src, $title, $url, $img, $caption)
 {
+    //$button_style = 'is-style-fill';
+    $button_style = 'is-style-outline';
     $html =
         '<div class="wp-block-buttons is-content-justification-left is-layout-flex wp-block-buttons-is-layout-flex">
-            <div class="wp-block-button is-style-fill">
+            <div class="wp-block-button ' . $button_style . '">
                 <div onclick="playItem(event)" data-src="' . $src . '" data-title="' . esc_html($title) . '" data-url="' . $url . '" data-img="' . $img . '" class="wp-block-button__link wp-element-button" style="border-radius:19px;padding-top:4px;padding-right:12px;padding-bottom:4px;padding-left:12px">' . $caption . '</div>
             </div>
         </div>';

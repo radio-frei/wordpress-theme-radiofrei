@@ -23,8 +23,7 @@ playButton.classList.add('rf-disabled');
 currentTime.classList.add('rf-disabled');
 durationTime.classList.add('rf-disabled');
 silderContainer.classList.add('rf-disabled');
-menuButton.classList.add('rf-disabled');
-//menuButton.style.display = 'none';
+menuButton.style.display = 'none';
 
 playImage.removeAttribute('srcset');
 playTitle.textContent = '';
@@ -106,8 +105,7 @@ audio.addEventListener('loadeddata', () => {
     playButton.classList.remove('rf-disabled');
     currentTime.classList.remove('rf-disabled');
     durationTime.classList.remove('rf-disabled');
-    menuButton.classList.remove('rf-disabled');
-    //menuButton.style.display = 'inline-block';
+    menuButton.style.display = 'inline-block';
     if (audio.duration !== Infinity) {
         silderContainer.classList.remove('rf-disabled');
     }
@@ -134,7 +132,6 @@ audio.addEventListener('emptied', () => {
     currentTime.classList.add('rf-disabled');
     durationTime.classList.add('rf-disabled');
     silderContainer.classList.add('rf-disabled');
-    menuButton.classList.add('rf-disabled');
     currentTime.textContent = '00:00';
     durationTime.textContent = '00:00';
     setRangeSlider(0);
