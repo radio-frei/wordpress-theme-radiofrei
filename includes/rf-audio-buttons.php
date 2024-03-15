@@ -104,8 +104,8 @@ function rf_get_block_content_for_button($audio_id)
  */
 function rf_create_audio_button($src, $title, $url, $img, $caption)
 {
-    //$button_style = 'is-style-fill';
-    $button_style = 'is-style-outline';
+    $button_style = 'is-style-fill';
+    //$button_style = 'is-style-outline';
     $html =
         '<div class="wp-block-buttons is-content-justification-left is-layout-flex wp-block-buttons-is-layout-flex">
             <div class="wp-block-button ' . $button_style . '">
