@@ -203,6 +203,7 @@ add_action('after_setup_theme', 'radiofrei_support');
 
 /**
  * Radio F.R.E.I. enqueue scripts and styles
+ * scripte und styles auf allen seiten laden, da sonst wegen ajax auch body bereiche außer main getauscht werden müssten
  *
  * @return void
  */
@@ -215,16 +216,17 @@ function radiofrei_scripts_styles()
 	wp_enqueue_style('radiofrei-style');
 
 	wp_enqueue_script('rf-audioplayer', get_theme_file_uri('assets/js/rf-audioplayer.js'), array(), '1.0', true);
+	// put theme uri to audioplayer script
+	wp_localize_script('rf-audioplayer', 'URLS', array('theme' => get_theme_file_uri()));
 
-	if (is_page('sendungen-a-z')) {
-		wp_enqueue_script('rf-filter-sendereihe', get_theme_file_uri('assets/js/rf-filter-sendereihe.js'), array(), '1.0', true);
-	}
+	wp_enqueue_script('topbar.min.js', get_theme_file_uri('/assets/js/topbar.min.js'), array(), '2.0.0', true);
+	wp_enqueue_script('radiofrei-ajax', get_theme_file_uri('/assets/js/rf-ajax.js'), array(), '1.0', true);
 
-	if (is_page('wochenprogramm')) {
-		wp_enqueue_script('jquery-ui-datepicker');
-		wp_enqueue_style('jquery-ui-datepicker-style', 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.1/themes/base/jquery-ui.css');
-		wp_enqueue_script('rf-datepicker', get_theme_file_uri('assets/js/rf-datepicker.js'), array('jquery', 'jquery-ui-datepicker'), '1.0', true);
-	}
+	wp_enqueue_script('rf-filter-sendereihe', get_theme_file_uri('assets/js/rf-filter-sendereihe.js'), array(), '1.0', true);
+
+	wp_enqueue_script('jquery-ui-datepicker');
+	wp_enqueue_style('jquery-ui-datepicker-style', 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.1/themes/base/jquery-ui.css');
+	wp_enqueue_script('rf-datepicker', get_theme_file_uri('assets/js/rf-datepicker.js'), array('jquery', 'jquery-ui-datepicker'), '1.0', true);
 }
 add_action('wp_enqueue_scripts', 'radiofrei_scripts_styles');
 

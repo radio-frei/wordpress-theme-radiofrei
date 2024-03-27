@@ -51,9 +51,9 @@ $rows = pods('sendetermin', $params)->data();
     <div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow" style="flex-basis:25%"></div>
     <div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow">
         <div class="wp-block-buttons is-horizontal is-content-justification-center is-layout-flex wp-block-buttons-is-layout-flex">
-            <div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="?rfstart=<?php echo $monday->modify('-7 days')->format('Y-m-d'); ?>">&lt;&lt;</a></div>
+            <div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="<?php echo get_permalink(); ?>?rfstart=<?php echo $monday->modify('-7 days')->format('Y-m-d'); ?>">&lt;&lt;</a></div>
             <div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="<?php echo get_permalink(); ?>">Diese Woche</a></div>
-            <div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="?rfstart=<?php echo $monday->modify('+7 days')->format('Y-m-d'); ?>">&gt;&gt;</a></div>
+            <div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="<?php echo get_permalink(); ?>?rfstart=<?php echo $monday->modify('+7 days')->format('Y-m-d'); ?>">&gt;&gt;</a></div>
         </div>
     </div>
     <div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow" style="flex-basis:25%">

@@ -1,39 +1,141 @@
 /*
- * radiofrei audio player
+ * radiofrei audio player 1.0
  */
 
 (function () {
 
-    const maxTitle = 55;
-    let isPlaying = false;
-    let isOpen = false;
+    /*
+     *  variables and constants
+     */
+    console.log('run player function');
 
-    const audio = document.querySelector('.rf-play-audio');
-    const playButton = document.querySelector('.rf-play-button');
-    const playImageFigure = document.querySelector('.rf-play-img');
-    const playImage = playImageFigure.querySelector('img');
-    const playImageLink = playImageFigure.querySelector('a');
-    const playTitle = document.querySelector('.rf-play-title').querySelector('a');
-    const currentTime = document.querySelector('.rf-play-current');
-    const durationTime = document.querySelector('.rf-play-duration');
-    const rangeSlider = document.querySelector('.rf-play-range');
-    const silderContainer = document.querySelector('.rf-slider');
-    const menuButton = document.querySelector('.rf-play-menu-button');
-    const footer = document.querySelector('footer');
+    let isPlaying = false,
+        isOpen = false;
 
-    playButton.classList.add('rf-disabled');
-    currentTime.classList.add('rf-disabled');
-    durationTime.classList.add('rf-disabled');
-    silderContainer.classList.add('rf-disabled');
-    menuButton.style.display = 'none';
+    const
+        maxTitle = 55,
 
-    playImage.removeAttribute('srcset');
+        imgPlay = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M10 16.5v-9l6 4.5M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10a10 10 0 0 0 10-10A10 10 0 0 0 12 2'/%3E%3C/svg%3E",
+        imgPlayMobile = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M8 5.14v14l11-7z'/%3E%3C/svg%3E",
+        imgPause = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M15 16h-2V8h2m-4 8H9V8h2m1-6A10 10 0 0 0 2 12a10 10 0 0 0 10 10a10 10 0 0 0 10-10A10 10 0 0 0 12 2'/%3E%3C/svg%3E",
+        imgPauseMobile = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M14 19h4V5h-4M6 19h4V5H6z'/%3E%3C/svg%3E",
+
+        audio = document.querySelector('.rf-play-audio'),
+        playButton = document.querySelector('.rf-play-button img'),
+        playImage = document.querySelector('.rf-play-img img'),
+        playImageLink = document.querySelector('.rf-play-img a'),
+        playTitle = document.querySelector('.rf-play-title a'),
+        currentTime = document.querySelector('.rf-play-current'),
+        durationTime = document.querySelector('.rf-play-duration'),
+        rangeSlider = document.querySelector('.rf-play-range'),
+        silderContainer = document.querySelector('.rf-slider'),
+        silderDesktopRow = document.querySelector('.rf-slider-desktop-row'),
+        silderMobileRow = document.querySelector('.rf-slider-mobile-row'),
+        timeMobileRow = document.querySelector('.rf-time-mobile-row'),
+        playCols = document.querySelector('.rf-play-cols'),
+        playColUtils = document.querySelector('.rf-play-col-utils'),
+        mobileCols = document.querySelector('.rf-mobile-cols'),
+        closeButton = document.querySelector('.rf-footer-close'),
+        footer = document.querySelector('footer'),
+
+        mqlMobile = window.matchMedia('(max-width: 781px)');
+
+
+    /*
+     * init
+     */
+
     playTitle.textContent = '';
 
+    // initial positioning
+    if (mqlMobile.matches) {
+        adaptScreen(mqlMobile);
+    }
+
+    // show player after initial positioning to reduce flicker
+    //footerContainer.style.opacity = '1';
+    //playCols.classList.remove('rf-hide');
+
+
+    /*
+    * functions
+    */
+
+    function disableOnMobile(disable) {
+        if (disable) {
+            playTitle.classList.add('rf-disabled');
+            playImageLink.classList.add('rf-disabled');
+            rangeSlider.classList.add('rf-disabled');
+        } else {
+            playTitle.classList.remove('rf-disabled');
+            playImageLink.classList.remove('rf-disabled');
+            rangeSlider.classList.remove('rf-disabled');
+        }
+    }
+
+    function disableAndGreyout(disable) {
+        if (disable) {
+            playButton.parentElement.classList.add('rf-disabled-grey');
+            currentTime.classList.add('rf-disabled-grey');
+            durationTime.classList.add('rf-disabled-grey');
+            silderContainer.classList.add('rf-disabled-grey');
+        } else {
+            playButton.parentElement.classList.remove('rf-disabled-grey');
+            currentTime.classList.remove('rf-disabled-grey');
+            durationTime.classList.remove('rf-disabled-grey');
+            if (audio.duration !== Infinity) {
+                silderContainer.classList.remove('rf-disabled-grey');
+            }
+        }
+    }
+
+    function adaptScreen(x) {
+        if (x.matches) {
+            // mobile
+            silderMobileRow.appendChild(silderContainer);
+            timeMobileRow.appendChild(currentTime);
+            timeMobileRow.appendChild(durationTime);
+            mobileCols.appendChild(playColUtils);
+            isPlaying ? setPlayIcon(false) : setPlayIcon(true);
+            playButton.parentElement.parentElement.style.flexBasis = '40px';
+            playButton.parentElement.parentElement.style.flexGrow = '0';
+            disableOnMobile(true);
+            footer.addEventListener('click', toggleFooter);
+        } else {
+            // desktop
+            playCols.appendChild(playColUtils);
+            silderDesktopRow.appendChild(currentTime);
+            silderDesktopRow.appendChild(silderContainer);
+            silderDesktopRow.appendChild(durationTime);
+            isPlaying ? setPlayIcon(false) : setPlayIcon(true);
+            playButton.parentElement.parentElement.style.flexBasis = '0';
+            playButton.parentElement.parentElement.style.flexGrow = '1';
+            disableOnMobile(false);
+            footer.removeEventListener('click', toggleFooter);
+            if (isOpen) toggleFooter();
+        }
+    }
+
+    function toggleFooter() {
+        if (isOpen) {
+            footer.style.height = '90px';
+            isOpen = false;
+            if (mqlMobile.matches) {
+                disableOnMobile(true);
+                footer.addEventListener('click', toggleFooter);
+            }
+        } else {
+            footer.style.height = '172px';
+            isOpen = true;
+            disableOnMobile(false);
+            footer.removeEventListener('click', toggleFooter);
+        }
+    }
 
     window.playItem = function (event) {
 
-        playButton.classList.remove('rf-playing');
+        //playButton.src = imgPlay;
+        setPlayIcon(true);
 
         // get data
         const src = event.target.getAttribute('data-src');
@@ -57,13 +159,22 @@
                         title = title.substring(0, maxTitle) + '...';
                     }
                     playTitle.textContent = title;
-                    playButton.classList.add('rf-playing');
+                    //playButton.src = imgPause;
+                    setPlayIcon(false);
                     resolve();
                 })
                 .catch((error) => {
                     reject(error);
                 });
         });
+    }
+
+    function setPlayIcon(play) {
+        if (play) {
+            playButton.src = mqlMobile.matches ? imgPlayMobile : imgPlay;
+        } else {
+            playButton.src = mqlMobile.matches ? imgPauseMobile : imgPause;
+        }
     }
 
     function drawRangeProgress(value) {
@@ -84,16 +195,28 @@
         return `${minutes < 10 ? "0" : ""}${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
     }
 
-    playButton.addEventListener('click', () => {
+
+    /*
+    * event listeners
+    */
+
+    mqlMobile.addEventListener('change', () => {
+        adaptScreen(mqlMobile);
+    });
+
+    playButton.addEventListener('click', (event) => {
         if (isPlaying) {
             audio.pause();
             isPlaying = false;
-            playButton.classList.remove('rf-playing');
+            //playButton.src = imgPlay;
+            setPlayIcon(true);
         } else {
             audio.play();
             isPlaying = true;
-            playButton.classList.add('rf-playing');
+            //playButton.src = imgPause;
+            setPlayIcon(false);
         }
+        event.stopPropagation();
     });
 
     rangeSlider.addEventListener('input', () => {
@@ -103,20 +226,19 @@
         audio.currentTime = seekTime;
     });
 
+    closeButton.addEventListener('click', (event) => {
+        toggleFooter();
+        event.stopPropagation();
+    });
+
     audio.addEventListener('loadeddata', () => {
-        playButton.classList.remove('rf-disabled');
-        currentTime.classList.remove('rf-disabled');
-        durationTime.classList.remove('rf-disabled');
-        menuButton.style.display = 'inline-block';
-        if (audio.duration !== Infinity) {
-            silderContainer.classList.remove('rf-disabled');
-        }
+        disableAndGreyout(false);
         durationTime.textContent = formatTime(audio.duration);
     });
 
     audio.addEventListener('timeupdate', () => {
         currentTime.textContent = formatTime(audio.currentTime);
-        if (!silderContainer.classList.contains('rf-disabled')) {
+        if (!silderContainer.classList.contains('rf-disabled-grey')) {
             const value = (audio.currentTime / audio.duration) * 100;
             setRangeSlider(value);
         }
@@ -124,34 +246,17 @@
 
     audio.addEventListener('ended', () => {
         isPlaying = false;
-        playButton.classList.remove('rf-playing');
+        //playButton.src = imgPlay;
+        setPlayIcon(true);
         currentTime.textContent = '00:00';
         setRangeSlider(0);
     });
 
     audio.addEventListener('emptied', () => {
-        playButton.classList.add('rf-disabled');
-        currentTime.classList.add('rf-disabled');
-        durationTime.classList.add('rf-disabled');
-        silderContainer.classList.add('rf-disabled');
+        disableAndGreyout(true);
         currentTime.textContent = '00:00';
         durationTime.textContent = '00:00';
         setRangeSlider(0);
-    });
-
-
-    menuButton.addEventListener('click', () => {
-        if (isOpen) {
-            footer.style.height = "90px";
-            isOpen = false;
-            menuButton.querySelector('a').textContent = 'mehr';
-            menuButton.classList.remove('rf-play-menu-open');
-        } else {
-            footer.style.height = "180px";
-            isOpen = true;
-            menuButton.querySelector('a').textContent = 'weniger';
-            menuButton.classList.add('rf-play-menu-open');
-        }
     });
 
 })();
