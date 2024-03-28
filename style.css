@@ -15,20 +15,33 @@ Tags: one-column, wide-blocks, custom-colors, custom-menu, custom-logo, editor-s
 */
 
 /* sticky player */
+header {
+    height: 72px;;
+}
+
 main {
     position: absolute;
     width: 100%;
-    max-height: calc(100vh - 160px);
-    min-height: calc(100vh - 160px);
+    max-height: calc(100vh - 72px);
+    min-height: calc(100vh - 72px);
     overflow-y: auto;
 }
 
 footer {
     position: fixed;
     width: 100%;
-    height: 90px;
+    height: 0px;
     bottom: 0px;
     background-color: black;
+}
+
+.rf-main-player {
+    max-height: calc(100vh - 144px);
+    min-height: calc(100vh - 144px);
+}
+
+.rf-footer-player {
+    height: 72px;
 }
 
 .rf-startseite {
@@ -57,13 +70,16 @@ footer {
     pointer-events: none;
 }
 
-.rf-disabled-grey {
-    pointer-events: none;
+.rf-grey {
     opacity: 0.4;
 }
 
 .rf-play-img {
     min-width: 46px;
+}
+
+.rf-play-button {
+    min-width: 32px;
 }
 
 .rf-play-title a {
@@ -78,7 +94,7 @@ footer {
     cursor: pointer;
 }
 
-.rf-play-button:hover {
+.rf-play-button:hover, .rf-footer-close:hover {
     -ms-transform: scale(1.05); /* IE 9 */
     -webkit-transform: scale(1.05); /* Safari 3-8 */
     transform: scale(1.05);
@@ -90,6 +106,10 @@ footer {
 
 .rf-slider {
     width: 100%;
+}
+
+.rf-play-range {
+    margin: 0px;
 }
 
 input[type="range"] {
