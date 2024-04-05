@@ -8,6 +8,8 @@
 
     /*
      *  variables and constants
+     *  ACHTUNG: nur Footer Elemente als const, alle Elemente außerhalb des Footers müssen
+     *  bei Bedarf jeweils neu selektiert werden, da sie durch ajax ersetzt werden (main etc.)
      */
 
     let isPlaying = false;
@@ -22,12 +24,14 @@
     const playButton = document.querySelector('.rf-play-button img');
     const playImage = document.querySelector('.rf-play-img img');
     const playImageLink = document.querySelector('.rf-play-img a');
-    const playTitle = document.querySelector('.rf-play-title a');
+    const playTitleLink = document.querySelector('.rf-play-title a');
     const currentTime = document.querySelector('.rf-play-current');
     const durationTime = document.querySelector('.rf-play-duration');
     const rangeSlider = document.querySelector('.rf-play-range');
     const silderContainer = document.querySelector('.rf-slider');
     const closeButton = document.querySelector('.rf-footer-close');
+    const closePlayerButton = document.querySelector('.rf-close-player');
+    const downloadButtonLink = document.querySelector('.rf-download a');
     const footer = document.querySelector('footer');
 
     /*
@@ -35,9 +39,12 @@
      */
 
     // TODO: preload live stream?
-    playTitle.textContent = '';
+    playTitleLink.textContent = '';
+    downloadButtonLink.setAttribute('download', '');
 
-    playTitle.classList.add('rf-disabled');
+
+    // hier statt gutenberg, weil Links!
+    playTitleLink.classList.add('rf-disabled');
     playImageLink.classList.add('rf-disabled');
 
 
@@ -48,17 +55,17 @@
     function toggleFooter() {
         if (isOpen) {
             // close footer
-            footer.style.height = '72px';
+            footer.classList.replace('rf-footer-player-open', 'rf-footer-player');
             isOpen = false;
-            playTitle.classList.add('rf-disabled');
+            playTitleLink.classList.add('rf-disabled');
             playImageLink.classList.add('rf-disabled');
             silderContainer.classList.add('rf-disabled');
             footer.addEventListener('click', toggleFooter);
         } else {
             // open footer
-            footer.style.height = '152px';
+            footer.classList.replace('rf-footer-player', 'rf-footer-player-open');
             isOpen = true;
-            playTitle.classList.remove('rf-disabled');
+            playTitleLink.classList.remove('rf-disabled');
             playImageLink.classList.remove('rf-disabled');
             if (audio.duration !== Infinity) {
                 silderContainer.classList.remove('rf-disabled');
@@ -73,15 +80,23 @@
 
         // get data
         const src = event.target.getAttribute('data-src');
-        var title = event.target.getAttribute('data-title');
+        let title = event.target.getAttribute('data-title');
         const url = event.target.getAttribute('data-url');
         const img = event.target.getAttribute('data-img');
 
         //early feedback
         playImage.src = img;
         playImageLink.href = url;
-        playTitle.textContent = 'lade...';
-        playTitle.href = url;
+        playTitleLink.textContent = 'lade...';
+        playTitleLink.href = url;
+
+        // open player
+        // main muss neu selektiert werden, da es durch ajax getauscht wird und verfällt
+        document.querySelector('main').classList.add('rf-main-player');
+        footer.classList.add('rf-footer-player');
+        if (!isOpen) {
+            footer.addEventListener('click', toggleFooter);
+        }
 
         return new Promise((resolve, reject) => {
             audio.src = src;
@@ -92,12 +107,8 @@
                     if (title.length > maxTitle) {
                         title = title.substring(0, maxTitle) + '...';
                     }
-                    playTitle.textContent = title;
+                    playTitleLink.textContent = title;
                     playButton.src = imgPause;
-                    // muss neu selektiert werden, da main durch ajax getauscht wird und verfällt
-                    document.querySelector('main').classList.add('rf-main-player');
-                    footer.classList.add('rf-footer-player');
-                    footer.addEventListener('click', toggleFooter);
                     resolve();
                 })
                 .catch((error) => {
@@ -154,13 +165,29 @@
         event.stopPropagation();
     });
 
+    closePlayerButton.addEventListener('click', () => {
+        audio.src = '';
+        // main muss neu selektiert werden, da es durch ajax getauscht wird und verfällt
+        document.querySelector('main').classList.remove('rf-main-player');
+        footer.classList.remove('rf-footer-player', 'rf-footer-player-open');
+        playTitleLink.textContent = '';
+        playTitleLink.classList.add('rf-disabled');
+        playImageLink.classList.add('rf-disabled');
+        isPlaying = false;
+        isOpen = false;
+    });
+
     audio.addEventListener('loadeddata', () => {
         playButton.parentElement.classList.remove('rf-grey', 'rf-disabled');
         currentTime.classList.remove('rf-grey');
         durationTime.classList.remove('rf-grey');
         if (audio.duration !== Infinity) {
             silderContainer.classList.remove('rf-grey');
-            if (isOpen) silderContainer.classList.remove('rf-disabled');
+            if (isOpen) {
+                silderContainer.classList.remove('rf-disabled');
+            }
+            downloadButtonLink.href = audio.src;
+            downloadButtonLink.parentElement.classList.remove('rf-grey', 'rf-disabled');
         }
         durationTime.textContent = formatTime(audio.duration);
     });
@@ -188,6 +215,8 @@
         currentTime.textContent = '00:00';
         durationTime.textContent = '00:00';
         setRangeSlider(0);
+        downloadButtonLink.href = '#';
+        downloadButtonLink.parentElement.classList.add('rf-grey', 'rf-disabled');
     });
 
 })();

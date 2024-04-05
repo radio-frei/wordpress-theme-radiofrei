@@ -16,7 +16,8 @@
 
     document.addEventListener('click', (event) => {
         const origin = event.target.closest('a[href^="' + document.location.origin + '"]');
-        if (origin) {
+        // download links ohne ajax
+        if (origin && !origin.hasAttribute('download')) {
             event.preventDefault();
             // close burger menu & reenable scroll
             const containers = document.querySelectorAll('.wp-block-navigation__responsive-container');
@@ -36,7 +37,9 @@
     });
 
     window.addEventListener('popstate', (event) => {
-        if (event.state) ajaxFetch(event.state.url, false);
+        if (event.state) {
+            ajaxFetch(event.state.url, false);
+        }
         //needs debugging?: 
         event.stopImmediatePropagation();
     });
@@ -99,12 +102,12 @@
                  * an den anfang der neuen Seite scrollen
                  */
                 scroll(0, 0);
+                topbar.hide();
             })
             .catch(error => {
                 console.error('error in ajax request:', error);
+                topbar.hide();
             });
-        // hide progressbar
-        topbar.hide();
     }
 
 

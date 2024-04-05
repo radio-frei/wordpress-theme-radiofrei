@@ -18,7 +18,7 @@ function rf_get_play_icon($dateTime)
     // $loggingfileurl = site_url('/logging/') . mysql2date('Y/m/d/Y m d H00', $dateTime) . ' radiofrei.mp3';
     // <audio controls preload="none"><source src="$loggingfileurl" type="audio/mpeg">Dein Browser kann kein HTML5-Audio.</audio>
 
-    $loggingfile = ABSPATH . 'logging/' . mysql2date('Y/m/d/Y m d H00', $dateTime) . ' radiofrei.mp3';
+    $loggingfile = ABSPATH . 'programm/' . mysql2date('Y/m/d/Y m d H00', $dateTime) . ' radiofrei.mp3';
     if (file_exists($loggingfile)) {
         return <<<HTML
 <img width="16" height="16" style="width:16px;vertical-align:text-bottom;" src="http://localhost/wpdev3/wp-content/uploads/2024/02/play_icon.png" alt="">

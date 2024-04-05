@@ -44,6 +44,10 @@ footer {
     height: 72px;
 }
 
+.rf-footer-player-open {
+    height: 152px;
+}
+
 .rf-startseite {
     background-image: url('assets/images/background4.webp');
     background-repeat: no-repeat;
@@ -94,7 +98,7 @@ footer {
     cursor: pointer;
 }
 
-.rf-play-button:hover, .rf-footer-close:hover {
+.rf-play-button:hover, .rf-footer-close:hover, .rf-close-player:hover, .rf-download:hover {
     -ms-transform: scale(1.05); /* IE 9 */
     -webkit-transform: scale(1.05); /* Safari 3-8 */
     transform: scale(1.05);

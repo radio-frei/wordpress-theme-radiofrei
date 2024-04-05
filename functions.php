@@ -215,11 +215,12 @@ function radiofrei_scripts_styles()
 	// Enqueue theme stylesheet.
 	wp_enqueue_style('radiofrei-style');
 
+	wp_enqueue_script('topbar.min.js', get_theme_file_uri('/assets/js/topbar.min.js'), array(), '2.0.0', true);
+
 	wp_enqueue_script('jquery-ui-datepicker');
 	wp_enqueue_style('jquery-ui-datepicker-style', 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.1/themes/base/jquery-ui.css');
 
 	wp_enqueue_script('rf-audioplayer', get_theme_file_uri('assets/js/rf-audioplayer.js'), array(), '1.0', true);
-	wp_enqueue_script('topbar.min.js', get_theme_file_uri('/assets/js/topbar.min.js'), array(), '2.0.0', true);
 	wp_enqueue_script('radiofrei-ajax', get_theme_file_uri('/assets/js/rf-ajax.js'), array('jquery', 'jquery-ui-datepicker'), '1.0', true);
 }
 add_action('wp_enqueue_scripts', 'radiofrei_scripts_styles');
