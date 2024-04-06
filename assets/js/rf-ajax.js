@@ -132,15 +132,18 @@
 
     // Kalender Wochenprogramm
     function checkForDatePicker() {
-        const kalenderButton = document.querySelector('#rf-datepicker');
-        if (kalenderButton) {
+        const calendarButton = document.querySelector('#rf-datepicker');
+        if (calendarButton) {
             // Date Picker initialisieren
-            jQuery(kalenderButton).datepicker({
+            jQuery(calendarButton).datepicker({
                 dateFormat: 'yy-mm-dd',
+                // showButtonPanel: true,
+                // changeMonth: true,
+                // changeYear: true,
                 showAnim: '',
                 onSelect: function (dateText) {
                     // val setzen, damit button nicht mit dateText beschriftet wird
-                    jQuery(kalenderButton).val("Kalender");
+                    jQuery(calendarButton).val("Kalender");
                     // URL mit dem ausgewählten Datum aktualisieren und Seite neu laden
                     const url = window.location.origin + window.location.pathname + '?' + 'rfstart=' + dateText;
                     ajaxFetch(url, window.location.href !== url);

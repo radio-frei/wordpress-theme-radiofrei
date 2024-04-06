@@ -18,6 +18,7 @@
 function rf_add_audio_data_to_button($block_content, $block)
 {
 
+    // TODO: get settings parameter for live stream url
     $live_src = 'https://streaming.fueralle.org/Radio-F.R.E.I';
     $live_title = 'Radio F.R.E.I. Live';
     $live_url = get_home_url();
