@@ -14,24 +14,26 @@
 
     let isPlaying = false;
     let isOpen = false;
-
+    let isLive = false;
+    let rafID = null;
+    let title = '';
     const maxTitle = 100;
 
     const imgPlay = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M8 5.14v14l11-7z'/%3E%3C/svg%3E";
     const imgPause = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M14 19h4V5h-4M6 19h4V5H6z'/%3E%3C/svg%3E";
 
     const audio = document.querySelector('.rf-play-audio');
-    const playButton = document.querySelector('.rf-play-button img');
-    const playImage = document.querySelector('.rf-play-img img');
-    const playImageLink = document.querySelector('.rf-play-img a');
-    const playTitleLink = document.querySelector('.rf-play-title a');
-    const currentTime = document.querySelector('.rf-play-current');
-    const durationTime = document.querySelector('.rf-play-duration');
-    const rangeSlider = document.querySelector('.rf-play-range');
-    const silderContainer = document.querySelector('.rf-slider');
-    const closeButton = document.querySelector('.rf-footer-close');
-    const closePlayerButton = document.querySelector('.rf-close-player');
-    const downloadButtonLink = document.querySelector('.rf-download a');
+    const playButtonImage = document.querySelector('.rf-play-button img');
+    const image = document.querySelector('.rf-play-img img');
+    const imageLink = document.querySelector('.rf-play-img a');
+    const titleLink = document.querySelector('.rf-play-title a');
+    const current = document.querySelector('.rf-play-current');
+    const duration = document.querySelector('.rf-play-duration');
+    const playRange = document.querySelector('.rf-play-range');
+    const playRangeContainer = document.querySelector('.rf-play-range-container');
+    const closePlayerButton = document.querySelector('.rf-close-player-button');
+    const closeFooterButton = document.querySelector('.rf-close-footer-button');
+    const downloadButtonLink = document.querySelector('.rf-download-button a');
     const footer = document.querySelector('footer');
 
     /*
@@ -39,13 +41,13 @@
      */
 
     // TODO: preload live stream?
-    playTitleLink.textContent = '';
+    titleLink.textContent = '';
     downloadButtonLink.setAttribute('download', '');
 
 
-    // hier statt gutenberg, weil Links!
-    playTitleLink.classList.add('rf-disabled');
-    playImageLink.classList.add('rf-disabled');
+    // kann nicht in gutenberg gesetzt werden, da dort kein Zugriff nur auf die Links
+    titleLink.classList.add('rf-disabled');
+    imageLink.classList.add('rf-disabled');
 
 
     /*
@@ -54,21 +56,21 @@
 
     function toggleFooter() {
         if (isOpen) {
-            // close footer
+            // minimize footer
             footer.classList.replace('rf-footer-player-open', 'rf-footer-player');
             isOpen = false;
-            playTitleLink.classList.add('rf-disabled');
-            playImageLink.classList.add('rf-disabled');
-            silderContainer.classList.add('rf-disabled');
+            titleLink.classList.add('rf-disabled');
+            imageLink.classList.add('rf-disabled');
+            playRangeContainer.classList.add('rf-disabled');
             footer.addEventListener('click', toggleFooter);
         } else {
-            // open footer
+            // maximize footer
             footer.classList.replace('rf-footer-player', 'rf-footer-player-open');
             isOpen = true;
-            playTitleLink.classList.remove('rf-disabled');
-            playImageLink.classList.remove('rf-disabled');
-            if (audio.duration !== Infinity) {
-                silderContainer.classList.remove('rf-disabled');
+            titleLink.classList.remove('rf-disabled');
+            imageLink.classList.remove('rf-disabled');
+            if (!isLive) {
+                playRangeContainer.classList.remove('rf-disabled');
             }
             footer.removeEventListener('click', toggleFooter);
         }
@@ -76,19 +78,19 @@
 
     window.rf_playItem = function (event) {
 
-        playButton.src = imgPlay;
+        playButtonImage.src = imgPlay;
 
         // get data
         const src = event.target.getAttribute('data-src');
-        let title = event.target.getAttribute('data-title');
+        title = event.target.getAttribute('data-title');
         const url = event.target.getAttribute('data-url');
         const img = event.target.getAttribute('data-img');
 
         //early feedback
-        playImage.src = img;
-        playImageLink.href = url;
-        playTitleLink.textContent = 'lade...';
-        playTitleLink.href = url;
+        image.src = img;
+        imageLink.href = url;
+        titleLink.textContent = 'Lade...';
+        titleLink.href = url;
 
         // open player
         // main muss neu selektiert werden, da es durch ajax getauscht wird und verfällt
@@ -103,12 +105,20 @@
             audio
                 .play()
                 .then(() => {
-                    isPlaying = true;
                     if (title.length > maxTitle) {
                         title = title.substring(0, maxTitle) + '...';
                     }
-                    playTitleLink.textContent = title;
-                    playButton.src = imgPause;
+                    titleLink.textContent = title;
+                    playButtonImage.src = imgPause;
+                    if ('mediaSession' in navigator) {
+                        navigator.mediaSession.metadata = new MediaMetadata({
+                            title: title,
+                            artist: 'Radio F.R.E.I.',
+                            artwork: [{ src: img }]
+                        });
+                    }
+                    requestAnimationFrame(updatePlayProgress);
+                    isPlaying = true;
                     resolve();
                 })
                 .catch((error) => {
@@ -117,13 +127,35 @@
         });
     }
 
-    function drawRangeProgress(value) {
-        rangeSlider.style.background = `linear-gradient(to right, #fff ${value}%, #4d4d4d ${value}%)`;
+    function togglePlay() {
+        if (isPlaying) {
+            audio.pause();
+            playButtonImage.src = imgPlay;
+            cancelAnimationFrame(rafID);
+            isPlaying = false;
+        } else {
+            audio.play();
+            playButtonImage.src = imgPause;
+            requestAnimationFrame(updatePlayProgress);
+            isPlaying = true;
+        }
     }
 
-    function setRangeSlider(value) {
-        rangeSlider.value = value;
-        drawRangeProgress(value);
+    function updatePlayProgress() {
+        if (!playRangeContainer.classList.contains('rf-grey')) {
+            setPlayRange((audio.currentTime / audio.duration) * 1000);
+        }
+        current.textContent = formatTime(audio.currentTime);
+        rafID = requestAnimationFrame(updatePlayProgress);
+    }
+
+    function drawRangeProgress(value) {
+        playRange.style.background = `linear-gradient(to right, #fff ${value}%, #4d4d4d ${value}%)`;
+    }
+
+    function setPlayRange(value) {
+        playRange.value = value;
+        drawRangeProgress(value / 10);
     }
 
     function formatTime(seconds) {
@@ -140,83 +172,128 @@
     * event listeners
     */
 
-    playButton.addEventListener('click', (event) => {
-        if (isPlaying) {
-            audio.pause();
-            isPlaying = false;
-            playButton.src = imgPlay;
-        } else {
-            audio.play();
-            isPlaying = true;
-            playButton.src = imgPause;
-        }
+    playButtonImage.addEventListener('click', (event) => {
+        togglePlay();
         event.stopPropagation();
     });
 
-    rangeSlider.addEventListener('input', () => {
-        const value = rangeSlider.value;
-        drawRangeProgress(value);
-        const seekTime = (value / 100) * audio.duration;
-        audio.currentTime = seekTime;
+    playRange.addEventListener('input', () => {
+        drawRangeProgress(playRange.value / 10);
+        current.textContent = formatTime(playRange.value * audio.duration / 1000);
+        if (!audio.paused) {
+            cancelAnimationFrame(rafID);
+        }
     });
 
-    closeButton.addEventListener('click', (event) => {
+    playRange.addEventListener('change', () => {
+        audio.currentTime = (playRange.value / 1000) * audio.duration;
+        if (!audio.paused) {
+            requestAnimationFrame(updatePlayProgress);
+        }
+    });
+
+    closePlayerButton.addEventListener('click', (event) => {
         toggleFooter();
         event.stopPropagation();
     });
 
-    closePlayerButton.addEventListener('click', () => {
+    closeFooterButton.addEventListener('click', () => {
         audio.src = '';
         // main muss neu selektiert werden, da es durch ajax getauscht wird und verfällt
         document.querySelector('main').classList.remove('rf-main-player');
         footer.classList.remove('rf-footer-player', 'rf-footer-player-open');
-        playTitleLink.textContent = '';
-        playTitleLink.classList.add('rf-disabled');
-        playImageLink.classList.add('rf-disabled');
+        titleLink.textContent = '';
+        titleLink.classList.add('rf-disabled');
+        imageLink.classList.add('rf-disabled');
         isPlaying = false;
         isOpen = false;
     });
 
+    /*
+    * audio event listeners
+    */
     audio.addEventListener('loadeddata', () => {
-        playButton.parentElement.classList.remove('rf-grey', 'rf-disabled');
-        currentTime.classList.remove('rf-grey');
-        durationTime.classList.remove('rf-grey');
+        playButtonImage.parentElement.classList.remove('rf-grey', 'rf-disabled');
+        current.classList.remove('rf-grey');
+        duration.classList.remove('rf-grey');
         if (audio.duration !== Infinity) {
-            silderContainer.classList.remove('rf-grey');
+            isLive = false;
+            playRangeContainer.classList.remove('rf-grey');
             if (isOpen) {
-                silderContainer.classList.remove('rf-disabled');
+                playRangeContainer.classList.remove('rf-disabled');
             }
             downloadButtonLink.href = audio.src;
             downloadButtonLink.parentElement.classList.remove('rf-grey', 'rf-disabled');
+        } else {
+            isLive = true;
         }
-        durationTime.textContent = formatTime(audio.duration);
-    });
-
-    audio.addEventListener('timeupdate', () => {
-        currentTime.textContent = formatTime(audio.currentTime);
-        if (!silderContainer.classList.contains('rf-grey')) {
-            const value = (audio.currentTime / audio.duration) * 100;
-            setRangeSlider(value);
-        }
+        duration.textContent = formatTime(audio.duration);
     });
 
     audio.addEventListener('ended', () => {
         isPlaying = false;
-        playButton.src = imgPlay;
-        currentTime.textContent = '00:00';
-        setRangeSlider(0);
+        playButtonImage.src = imgPlay;
+        cancelAnimationFrame(rafID);
+        current.textContent = '00:00';
+        setPlayRange(0);
     });
 
     audio.addEventListener('emptied', () => {
-        playButton.parentElement.classList.add('rf-grey', 'rf-disabled');
-        currentTime.classList.add('rf-grey');
-        durationTime.classList.add('rf-grey');
-        silderContainer.classList.add('rf-grey', 'rf-disabled');
-        currentTime.textContent = '00:00';
-        durationTime.textContent = '00:00';
-        setRangeSlider(0);
+        playButtonImage.parentElement.classList.add('rf-grey', 'rf-disabled');
+        current.classList.add('rf-grey');
+        duration.classList.add('rf-grey');
+        playRangeContainer.classList.add('rf-grey', 'rf-disabled');
+        current.textContent = '00:00';
+        duration.textContent = '00:00';
+        setPlayRange(0);
+        cancelAnimationFrame(rafID);
         downloadButtonLink.href = '#';
         downloadButtonLink.parentElement.classList.add('rf-grey', 'rf-disabled');
     });
+
+    audio.addEventListener('seeking', () => {
+        titleLink.textContent = 'Suche...';
+    });
+
+    audio.addEventListener('seeked', () => {
+        titleLink.textContent = title;
+    });
+
+
+    /*
+    * Media Session API
+    */
+    if ('mediaSession' in navigator) {
+        navigator.mediaSession.setActionHandler('play', togglePlay);
+
+        navigator.mediaSession.setActionHandler('pause', togglePlay);
+
+        navigator.mediaSession.setActionHandler('seekbackward', (details) => {
+            audio.currentTime = audio.currentTime - (details.seekOffset || 10);
+        });
+
+        navigator.mediaSession.setActionHandler('seekforward', (details) => {
+            audio.currentTime = audio.currentTime + (details.seekOffset || 10);
+        });
+
+        navigator.mediaSession.setActionHandler('seekto', (details) => {
+            if (details.fastSeek && 'fastSeek' in audio) {
+                audio.fastSeek(details.seekTime);
+                return;
+            }
+            audio.currentTime = details.seekTime;
+        });
+
+        navigator.mediaSession.setActionHandler('stop', () => {
+            audio.currentTime = 0;
+            setPlayRange(0);
+            current.textContent = '00:00';
+            if (isPlaying) {
+                playButtonImage.src = imgPlay;
+                cancelAnimationFrame(rafID);
+                isPlaying = false;
+            }
+        });
+    }
 
 })();

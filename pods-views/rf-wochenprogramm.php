@@ -5,29 +5,6 @@
  * pods view für den pods-anzeigen-block des wochenprogramms
  */
 
-
-/**
- * gibt html für das play icon zurück, wenn eine sendung zum nachhören vorhanden ist
- * TODO: audio tag zurückgeben, um wiedergabe direkt aus dem programmschema zu starten?
- */
-function rf_get_play_icon($dateTime)
-{
-    // für später, url der audiodatei:
-    // siehe https://developer.wordpress.org/reference/functions/wp_audio_shortcode/ (mit hooks)
-    // oder:
-    // $loggingfileurl = site_url('/logging/') . mysql2date('Y/m/d/Y m d H00', $dateTime) . ' radiofrei.mp3';
-    // <audio controls preload="none"><source src="$loggingfileurl" type="audio/mpeg">Dein Browser kann kein HTML5-Audio.</audio>
-
-    $loggingfile = ABSPATH . 'programm/' . mysql2date('Y/m/d/Y m d H00', $dateTime) . ' radiofrei.mp3';
-    if (file_exists($loggingfile)) {
-        return <<<HTML
-<img width="16" height="16" style="width:16px;vertical-align:text-bottom;" src="http://localhost/wpdev3/wp-content/uploads/2024/02/play_icon.png" alt="">
-HTML;
-    }
-}
-
-
-
 $rfstart = isset($_GET['rfstart']) ? $_GET['rfstart'] : '';
 
 if (!($date = date_create_immutable($rfstart, wp_timezone()))) {
@@ -38,7 +15,7 @@ $monday = $date->modify('Monday this week');
 $sunday = $date->modify('Sunday this week');
 
 $params = array(
-    'select' => 't.start, t.ende, t.name, t.permalink',
+    'select' => 't.start, t.ende, t.name, t.permalink, t.bild',
     'where'  => "DATE(t.start) BETWEEN DATE('" . $monday->format('Y-m-d') . "') AND DATE('" . $sunday->format('Y-m-d') . "')",
     'limit'  => -1
 );
@@ -102,11 +79,34 @@ if (!empty($rows)) {
                                         <td colspan="2"><?php echo rf_strip_date($row->start) . ' Uhr'; ?></td>
                                     </tr>
                                     <tr>
-                                        <td style="border-right:none;">
-                                            <a href="<?php echo site_url() . '/sendung/' . $row->permalink; ?>"><?php echo $row->name; ?></a>
+                                        <td style="border-right:none;width:46px;line-height:0;">
+                                            <?php
+                                            // daten ermitteln
+                                            // es wird von der Startzeit nur die Stunde gecheckt (H00)
+                                            $file_src = ABSPATH . 'programm/' . mysql2date('Y/m/d/Y m d H00', $row->start) . ' radiofrei.mp3';
+                                            $src = site_url('/programm/') . mysql2date('Y/m/d/Y m d H00', $row->start) . ' radiofrei.mp3';
+                                            $title = $row->name . ' - ' . rf_strip_time($row->start);
+                                            $url = site_url() . '/sendung/' . $row->permalink;
+                                            $img = wp_get_attachment_image_url($row->bild);
+                                            // gibt es einen mitschnitt?
+                                            if (file_exists($file_src)) {
+                                                // sendungsbild mit play button
+                                            ?>
+                                                <div style="position:relative;">
+                                                    <img width="46" height="46" src="<?php echo $img; ?>" />
+                                                    <img onclick="rf_playItem(event)" data-src="<?php echo $src; ?>" data-title="<?php echo $title; ?>" data-url="<?php echo $url; ?>" data-img="<?php echo $img; ?>" class="rf-overlay-play-button" width="24" height="24" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M8 5.14v14l11-7z'/%3E%3C/svg%3E" />
+                                                </div>
+                                            <?php
+                                            } else {
+                                                // nur sendungsbild
+                                            ?>
+                                                <a href="<?php echo $url; ?>"><img width="46" height="46" src="<?php echo $img; ?>" /></a>
+                                            <?php
+                                            } // ende if
+                                            ?>
                                         </td>
-                                        <td style="border-left:none;vertical-align:top;width:16px;">
-                                            <a href="<?php echo site_url() . '/sendung/' . $row->permalink; ?>"><?php echo rf_get_play_icon($row->start); ?></a>
+                                        <td style="border-left:none;padding-left:0;">
+                                            <a href="<?php echo $url; ?>"><?php echo $row->name; ?></a>
                                         </td>
                                     </tr>
                                 <?php

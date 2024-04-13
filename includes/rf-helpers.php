@@ -34,25 +34,25 @@ function rf_log($data)
 /**
  * zur verwendung in pods view und template magic tags, z. B. {@start,rf_strip_date} Uhr
  */
-function rf_strip_time($dateTime)
+function rf_strip_time($date_time)
 {
-    return mysql2date('d. F Y', $dateTime);
+    return mysql2date('d. F Y', $date_time);
 }
-function rf_strip_date($dateTime)
+function rf_strip_date($date_time)
 {
-    return mysql2date('H:i', $dateTime);
-}
-
-function rf_get_weekday($dateTime)
-{
-    return mysql2date('D, d.m.y', $dateTime);
+    return mysql2date('H:i', $date_time);
 }
 
-function rf_val_date($value)
+function rf_get_weekday($date_time)
 {
-    if (!empty($value)) {
-        if (date_create_from_format('Y-m-d', $value) !== false) {
-            return $value;
+    return mysql2date('D, d.m.y', $date_time);
+}
+
+function rf_val_date($date)
+{
+    if (!empty($date)) {
+        if (date_create_from_format('Y-m-d', $date) !== false) {
+            return $date;
         }
     }
 };

@@ -23,7 +23,7 @@ function rf_add_audio_data_to_button($block_content, $block)
     $live_title = 'Radio F.R.E.I. Live';
     $live_url = get_home_url();
     $live_img = get_theme_file_uri('assets/images/live.webp');
-    $live_caption = '● Live';
+    $live_caption = 'Live';
 
     // nur buttons mit class rf-audio-button ändern
     if (!is_admin() && !empty($block['attrs']['className']) && strpos($block['attrs']['className'], 'rf-audio-button') !== false) {
@@ -95,7 +95,7 @@ function rf_get_block_content_for_button($audio_id)
     $title = get_the_title();
     $url = get_permalink();
     $img = get_the_post_thumbnail_url(get_the_ID(), 'thumbnail');
-    $caption = '▶ Hören ' . wp_get_attachment_metadata($audio_id)['length_formatted'];
+    $caption = 'Hören ' . wp_get_attachment_metadata($audio_id)['length_formatted'];
     return rf_create_audio_button($src, $title, $url, $img, $caption);
 }
 
@@ -107,10 +107,11 @@ function rf_create_audio_button($src, $title, $url, $img, $caption)
 {
     $button_style = 'is-style-fill';
     //$button_style = 'is-style-outline';
+    $img_src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='21' height='21' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M8 5.14v14l11-7z'/%3E%3C/svg%3E";
     $html =
         '<div class="wp-block-buttons is-content-justification-left is-layout-flex wp-block-buttons-is-layout-flex">
             <div class="wp-block-button ' . $button_style . '">
-                <div onclick="rf_playItem(event)" data-src="' . $src . '" data-title="' . esc_html($title) . '" data-url="' . $url . '" data-img="' . $img . '" class="wp-block-button__link wp-element-button" style="border-radius:19px;padding-top:4px;padding-right:12px;padding-bottom:4px;padding-left:12px">' . $caption . '</div>
+                <div onclick="rf_playItem(event)" data-src="' . $src . '" data-title="' . esc_html($title) . '" data-url="' . $url . '" data-img="' . $img . '" class="wp-block-button__link wp-element-button" style="border-radius:19px;padding-top:4px;padding-right:12px;padding-bottom:4px;padding-left:12px"><img style="vertical-align:bottom;margin-left:-5px;margin-bottom:1px;" src="' . $img_src . '">' . $caption . '</div>
             </div>
         </div>';
     return $html;

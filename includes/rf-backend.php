@@ -164,12 +164,16 @@ function rf_post_save_sendung($pieces, $is_new_item, $id)
     $st_ids = $pieces['fields']['r_sendetermine']['value'];
     if (!empty($st_ids) && is_array($st_ids)) {
         $post = get_post($id);
+        // sendereihe ermitteln:
+        $sendereihe = get_the_terms($id, 'sendereihe')[0];
         $data = array(
-            // gleicher Titel wie Sendung:
+            // Titel der Sendung nehmen:
             //'name' => $post->post_title,
-            // kurzer Titel nach Sendereihe:
-            'name' => get_the_terms($id, 'sendereihe')[0]->name,
-            'permalink' => $post->post_name
+            // Titel der Sendereihe nehmen:
+            'name' => $sendereihe->name,
+            'permalink' => $post->post_name,
+            // bild id der sendereihe
+            'bild' => get_term_meta($sendereihe->term_id, 'bild', true)
         );
         foreach ($st_ids as $st_id) {
             $pod_st = pods('sendetermin', $st_id);
@@ -181,14 +185,20 @@ add_action('pods_api_post_save_pod_item_sendung', 'rf_post_save_sendung', 10, 3)
 
 
 /**
- * vor dem speichern eines sendetermins name und permalink des sendetermins auf die der ausgewählten sendung setzen
+ * vor dem speichern eines sendetermins name und permalink des sendetermins auf die daten der ausgewählten sendung setzen
  */
 function rf_pre_save_sendetermin($pieces, $is_new_item)
 {
     if (!empty($pieces['fields']['r_sendung']['value'])) {
         $sendung = get_post($pieces['fields']['r_sendung']['value']['0']);
-        $pieces['fields']['name']['value'] = $sendung->post_title;
+        $sendereihe = get_the_terms($sendung, 'sendereihe')[0];
+        // Titel der Sendung nehmen:
+        //$pieces['fields']['name']['value'] = $sendung->post_title;
+        // Titel der Sendereihe nehmen:
+        $pieces['fields']['name']['value'] = $sendereihe->name;
         $pieces['fields']['permalink']['value'] = $sendung->post_name;
+        // bild id der sendereihe
+        $pieces['fields']['bild']['value'] = get_term_meta($sendereihe->term_id, 'bild', true);
     }
     return $pieces;
 }
