@@ -4,8 +4,6 @@
 
 (function () {
 
-    //console.log('run player function');
-
     /*
      *  variables and constants
      *  ACHTUNG: nur Footer Elemente als const, alle Elemente außerhalb des Footers müssen
@@ -40,10 +38,8 @@
      * init
      */
 
-    // TODO: preload live stream?
     titleLink.textContent = '';
     downloadButtonLink.setAttribute('download', '');
-
 
     // kann nicht in gutenberg gesetzt werden, da dort kein Zugriff nur auf die Links
     titleLink.classList.add('rf-disabled');
@@ -129,11 +125,13 @@
 
     function togglePlay() {
         if (isPlaying) {
+            // pause
             audio.pause();
             playButtonImage.src = imgPlay;
             cancelAnimationFrame(rafID);
             isPlaying = false;
         } else {
+            // play
             audio.play();
             playButtonImage.src = imgPause;
             requestAnimationFrame(updatePlayProgress);
