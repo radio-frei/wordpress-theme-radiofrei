@@ -157,3 +157,12 @@ footer {
     width: 12px;
     height: 12px;
 }
+
+/* wochenprogramm */
+.rf-circle-play-button {
+    cursor: pointer;
+    background: black;
+    border-radius: 16px;
+    padding: 3px;
+    margin-top: 5px;
+}
