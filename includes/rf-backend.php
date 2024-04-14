@@ -18,6 +18,7 @@ $rf_tax_mb->set('force_selection', true);
 
 /*
  * admin spalten für liste der sendereihen anpassen
+ * https://developer.wordpress.org/reference/hooks/manage_screen-id_columns/
  */
 add_filter('manage_edit-sendereihe_columns', function ($columns) {
     if (!empty($columns) && is_array($columns)) {
@@ -31,7 +32,7 @@ add_filter('manage_edit-sendereihe_columns', function ($columns) {
         unset($columns['posts']);
         $columns['bild'] = 'Bild';
         $columns['name'] = $name;
-        $columns['description'] = $desc;
+        $columns['new_description'] = $desc;
         $columns['user'] = 'Benutzer';
         $columns['slug'] = $slug;
         $columns['posts'] = $posts;
@@ -39,6 +40,10 @@ add_filter('manage_edit-sendereihe_columns', function ($columns) {
     }
 });
 
+/*
+ * inhalt der admin spalten für liste der sendereihen anpassen
+ * https://developer.wordpress.org/reference/hooks/manage_this-screen-taxonomy_custom_column/
+ */
 add_action('manage_sendereihe_custom_column', function ($string, $column_name, $term_id) {
     switch ($column_name) {
         case 'bild':
@@ -51,6 +56,9 @@ add_action('manage_sendereihe_custom_column', function ($string, $column_name, $
                     echo nl2br(get_user_by('ID', $user)->display_name . "\n");
                 }
             }
+            break;
+        case 'new_description':
+            echo wp_trim_words(term_description($term_id), 12);
             break;
     }
 }, 10, 3);

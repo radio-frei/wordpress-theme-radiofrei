@@ -148,7 +148,7 @@
     }
 
     function drawRangeProgress(value) {
-        playRange.style.background = `linear-gradient(to right, #fff ${value}%, #4d4d4d ${value}%)`;
+        playRange.style.setProperty('--range-progress-width', value + '%');
     }
 
     function setPlayRange(value) {

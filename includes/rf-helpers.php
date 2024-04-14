@@ -56,3 +56,8 @@ function rf_val_date($date)
         }
     }
 };
+
+function rf_limit_words_12($string)
+{
+    return wp_trim_words($string, 12);
+}

@@ -68,7 +68,7 @@ if (!empty($rows)) {
                             ?>
                                     <thead>
                                         <tr>
-                                            <th colspan="2"><?php echo rf_get_weekday($row->start); ?></th>
+                                            <th colspan="3"><?php echo rf_get_weekday($row->start); ?></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -76,10 +76,10 @@ if (!empty($rows)) {
                                 } // ende if $key == 0
                                     ?>
                                     <tr>
-                                        <td colspan="2"><?php echo rf_strip_date($row->start) . ' Uhr'; ?></td>
+                                        <td colspan="3"><?php echo rf_strip_date($row->start) . ' Uhr'; ?></td>
                                     </tr>
                                     <tr>
-                                        <td style="border-right:none;width:46px;line-height:0;">
+                                        <td style="border-right:none;width:58px;line-height:0;">
                                             <?php
                                             // daten ermitteln
                                             // es wird von der Startzeit nur die Stunde gecheckt (H00)
@@ -88,25 +88,21 @@ if (!empty($rows)) {
                                             $title = $row->name . ' - ' . rf_strip_time($row->start);
                                             $url = site_url() . '/sendung/' . $row->permalink;
                                             $img = wp_get_attachment_image_url($row->bild);
+                                            ?>
+                                            <a href="<?php echo $url; ?>"><img width="58" height="58" src="<?php echo $img; ?>" /></a>
+                                        </td>
+                                        <td style="border-left:none;padding-left:2px;vertical-align:top;">
+                                            <a href="<?php echo $url; ?>"><?php echo $row->name; ?></a>
+                                            <?php
                                             // gibt es einen mitschnitt?
                                             if (file_exists($file_src)) {
-                                                // sendungsbild mit play button
                                             ?>
-                                                <div style="position:relative;">
-                                                    <img width="46" height="46" src="<?php echo $img; ?>" />
-                                                    <img onclick="rf_playItem(event)" data-src="<?php echo $src; ?>" data-title="<?php echo $title; ?>" data-url="<?php echo $url; ?>" data-img="<?php echo $img; ?>" class="rf-overlay-play-button" width="24" height="24" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M8 5.14v14l11-7z'/%3E%3C/svg%3E" />
+                                                <div style="display:flex;justify-content:right;margin-top:5px;">
+                                                    <?php echo rf_create_audio_button($src, $title, $url, $img, 'Hören'); ?>
                                                 </div>
-                                            <?php
-                                            } else {
-                                                // nur sendungsbild
-                                            ?>
-                                                <a href="<?php echo $url; ?>"><img width="46" height="46" src="<?php echo $img; ?>" /></a>
                                             <?php
                                             } // ende if
                                             ?>
-                                        </td>
-                                        <td style="border-left:none;padding-left:0;">
-                                            <a href="<?php echo $url; ?>"><?php echo $row->name; ?></a>
                                         </td>
                                     </tr>
                                 <?php

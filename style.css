@@ -112,17 +112,19 @@ footer {
 }
 
 .rf-play-range {
-    margin: 0px;
-}
-
-.rf-play-range {
     -webkit-appearance: none;
-    -moz-appearance: none;
+    -moz-appearance: none;    
+    /* variable for styling the range progress from rf-audioplayer.js */
+    --range-progress-width: 0%;
+    background: linear-gradient(to right, #fff var(--range-progress-width), #4d4d4d var(--range-progress-width));
     height: 4px;
     border-radius: 16px;
     width: 100%;
-    background: #4d4d4d;
-    cursor: pointer;
+    margin: 0px;
+}
+
+.rf-play-range:hover {
+    background: linear-gradient(to right, #1db954 var(--range-progress-width), #4d4d4d var(--range-progress-width));
 }
 
 .rf-play-range::-webkit-slider-thumb {
@@ -133,6 +135,7 @@ footer {
     background-color: #fff;
     border-radius: 50%;
     border: none;
+    cursor: pointer;
 }
 
 .rf-play-range::-moz-range-thumb {
@@ -142,6 +145,7 @@ footer {
     background-color: #fff;
     border-radius: 50%;
     border: none;
+    cursor: pointer;
 }
 
 .rf-play-range-container:hover .rf-play-range::-webkit-slider-thumb {
