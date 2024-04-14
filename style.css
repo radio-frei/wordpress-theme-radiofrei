@@ -160,9 +160,9 @@ footer {
 
 /* wochenprogramm */
 .rf-circle-play-button {
-    cursor: pointer;
-    background: black;
+    margin-top: 5px;
     border-radius: 16px;
     padding: 3px;
-    margin-top: 5px;
+    cursor: pointer;
+    background: black;
 }
