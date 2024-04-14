@@ -14,25 +14,44 @@
         checkForDatePicker()
     });
 
+    // close burger menu & reenable scroll
+    function resetBurgerMenu() {
+        const containers = document.querySelectorAll('.wp-block-navigation__responsive-container');
+        containers.forEach(i => {
+            i.classList.remove('is-menu-open', 'has-modal-open');
+            i.setAttribute('aria-hidden', 'true');
+        });
+        const dialogs = document.querySelectorAll('.wp-block-navigation__responsive-dialog');
+        dialogs.forEach(i => {
+            i.removeAttribute('aria-modal');
+            i.removeAttribute('role');
+        })
+        document.documentElement.classList.remove('has-modal-open');
+        document.body.setAttribute('overflow', '');
+    }
+
+    // links mit ajax aufrufen außer downloads
     document.addEventListener('click', (event) => {
         const origin = event.target.closest('a[href^="' + document.location.origin + '"]');
         // download links ohne ajax
         if (origin && !origin.hasAttribute('download')) {
             event.preventDefault();
-            // close burger menu & reenable scroll
-            const containers = document.querySelectorAll('.wp-block-navigation__responsive-container');
-            containers.forEach(i => {
-                i.classList.remove('is-menu-open', 'has-modal-open');
-                i.setAttribute('aria-hidden', 'true');
-            });
-            const dialogs = document.querySelectorAll('.wp-block-navigation__responsive-dialog');
-            dialogs.forEach(i => {
-                i.removeAttribute('aria-modal');
-                i.removeAttribute('role');
-            })
-            document.documentElement.classList.remove('has-modal-open');
-            document.body.setAttribute('overflow', '');
+            resetBurgerMenu();
             ajaxFetch(origin.href, window.location.href !== origin.href);
+        }
+    });
+
+    // Suche mit ajax
+    document.addEventListener('submit', (event) => {
+        const form = event.target.closest('form[action^="' + document.location.origin + '"]');
+        if (form) {
+            event.preventDefault();
+            resetBurgerMenu();
+            // FormData erstellen, um die Formulardaten zu erfassen
+            const formData = new FormData(form);
+            const queryString = new URLSearchParams(formData).toString();
+            const url = `${form.action}?${queryString}`;
+            ajaxFetch(url, window.location.href !== url);
         }
     });
 
