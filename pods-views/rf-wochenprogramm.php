@@ -89,7 +89,7 @@ if (!empty($rows)) {
                                             // gibt es einen mitschnitt?
                                             if (file_exists($file_src)) {
                                                 $src = site_url('/programm/') . mysql2date('Y/m/d/Y m d H00', $row->start) . ' radiofrei.mp3';
-                                                $title = $row->name . ' - ' . rf_strip_time($row->start);
+                                                $title = $row->name . ' - ' . rf_strip_time($row->start) . ', ' . rf_strip_date($row->start) . ' Uhr';
                                             ?>
                                                 <!-- <div style="margin-top:5px;">
                                                     <?php echo rf_create_audio_button($src, $title, $url, $img, 'Hören'); ?>
