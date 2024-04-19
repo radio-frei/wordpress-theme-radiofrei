@@ -86,11 +86,11 @@ footer {
     min-width: 32px;
 }
 
-.rf-play-title a {
+.rf-play-title a, .rf-broadcast-title a {
     text-decoration: none;
 }
 
-.rf-play-title a:hover {
+.rf-play-title a:hover, .rf-broadcast-title a:hover {
     text-decoration: underline;
 }
 

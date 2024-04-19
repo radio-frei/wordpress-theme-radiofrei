@@ -55,17 +55,20 @@
         }
     });
 
+    // browser vor/zurück mit ajax
     window.addEventListener('popstate', (event) => {
         if (event.state) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
             ajaxFetch(event.state.url, false);
         }
-        //needs debugging?: 
-        event.stopImmediatePropagation();
     });
+
 
     function ajaxFetch(url, pushState) {
         // show progressbar
         topbar.show();
+
         fetch(url)
             .then((response) => {
                 if (!response.ok) {
@@ -74,8 +77,8 @@
                 return response.text();
             })
             .then((html) => {
+
                 const newDocument = new DOMParser().parseFromString(html, 'text/html');
-                if (pushState) history.pushState({ url: url }, '', url);
 
                 /*
                  * css klassen des footers anpassen
@@ -100,33 +103,49 @@
                     oldElement.className = rf + newElement.className;
                 }
 
-                /*
-                 * head und main tauschen
-                 */
                 const oldMain = document.querySelector('main');
                 const newMain = newDocument.querySelector('main');
+
+                // save current scroll position
+                let oldScrollPosition = oldMain.scrollTop;
 
                 // footer player offen lassen wenn offen
                 if (oldMain.classList.contains('rf-main-player')) {
                     newMain.classList.add('rf-main-player');
                 }
 
+                // head und main tauschen
                 document.documentElement.replaceChild(newDocument.head, document.head);
                 oldMain.parentNode.replaceChild(newMain, oldMain);
 
                 // wenn kalender button auf seite, setup datepicker
                 checkForDatePicker()
 
-                /*
-                 * an den anfang der neuen Seite scrollen
-                 */
-                scroll(0, 0);
+
+                // Link wurde aufgerufen, push history
+                if (pushState) {
+                    // save scroll position in state
+                    history.replaceState({ url: window.location.href, scrollPosition: oldScrollPosition }, '');
+                    history.pushState({ url: url }, '', url);
+                }
+
+                // Restore scroll position if stored in history state
+                const currentState = history.state;
+                if (currentState && currentState.scrollPosition !== undefined) {
+                    newMain.scrollTo(0, currentState.scrollPosition);
+                } else {
+                    //newMain.scrollTo(0, 0);
+                }
+
+                // hide progressbar
                 topbar.hide();
+
             })
             .catch(error => {
                 console.error('error in ajax request:', error);
                 topbar.hide();
             });
+
     }
 
 
