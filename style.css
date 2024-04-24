@@ -166,3 +166,7 @@ footer {
     cursor: pointer;
     background: black;
 }
+
+.rf-broadcast-image {
+    /* filter: grayscale(100%); */
+}

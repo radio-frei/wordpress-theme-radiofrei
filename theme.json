@@ -525,7 +525,7 @@
 					"slug": "accent-2"
 				},
 				{
-					"color": "#92d5ff",
+					"color": "#0086da",
 					"name": "Akzent / Drei",
 					"slug": "accent-3"
 				},
@@ -545,7 +545,7 @@
 					"slug": "custom-rf-blau"
 				},
 				{
-					"color": "#32535ce6",
+					"color": "#32535cf5",
 					"name": "rf-blau-transparent",
 					"slug": "custom-rf-blau-transparent"
 				},
@@ -921,6 +921,11 @@
 					"fontWeight": "500"
 				}
 			},
+			"core/navigation-link": {
+				"typography": {
+					"textDecoration": "none"
+				}
+			},
 			"core/post-author": {
 				"typography": {
 					"fontSize": "var(--wp--preset--font-size--small)"
@@ -980,6 +985,9 @@
 				}
 			},
 			"core/post-terms": {
+				"color": {
+					"text": "var(--wp--preset--color--base-2)"
+				},
 				"css": "& .wp-block-post-terms__prefix{color: var(--wp--preset--color--contrast-2);}",
 				"elements": {
 					"link": {
@@ -988,13 +996,18 @@
 								"textDecoration": "underline"
 							}
 						},
+						"color": {
+							"text": "var(--wp--preset--color--base-2)"
+						},
 						"typography": {
 							"textDecoration": "none"
 						}
 					}
 				},
 				"typography": {
-					"fontSize": "var(--wp--preset--font-size--small)"
+					"fontSize": "var(--wp--preset--font-size--small)",
+					"fontStyle": "normal",
+					"fontWeight": "500"
 				}
 			},
 			"core/post-title": {
@@ -1297,7 +1310,8 @@
 					"text": "var(--wp--preset--color--base-2)"
 				},
 				"typography": {
-					"fontFamily": "var(--wp--preset--font-family--body)"
+					"fontFamily": "var(--wp--preset--font-family--body)",
+					"textDecoration": "underline"
 				}
 			}
 		},
@@ -1339,5 +1353,5 @@
 		}
 	],
 	"version": 2,
-	"$schema": "https://schemas.wp.org/wp/6.4/theme.json"
+	"$schema": "https://schemas.wp.org/wp/6.5/theme.json"
 }

@@ -51,13 +51,18 @@ function radiofrei_block_styles()
 				.is-style-pill a,
 				.is-style-pill span:not([class], [data-rich-text-placeholder]) {
 					display: inline-block;
-					background-color: var(--wp--preset--color--base-2);
-					padding: 0.375rem 0.875rem;
-					border-radius: var(--wp--preset--spacing--20);
+					background-color: var(--wp--preset--color--contrast-2);
+					border-radius: 19px;
+					padding-top: 4px;
+					padding-right: 12px;
+					padding-bottom: 4px;
+					padding-left: 12px;
+					margin-bottom: 4px;
 				}
 
 				.is-style-pill a:hover {
-					background-color: var(--wp--preset--color--contrast-3);
+					background-color: var(--wp--preset--color--accent-4);
+					text-decoration: none !important;
 				}',
 		)
 	);
@@ -211,18 +216,18 @@ add_action('after_setup_theme', 'radiofrei_support');
 function radiofrei_scripts_styles()
 {
 	// Register theme stylesheet.
-	wp_register_style('radiofrei-style', get_template_directory_uri() . '/style.css', array(), wp_get_theme()->get('Version'));
+	wp_register_style('radiofrei-style', get_template_directory_uri() . '/style.min.css', array(), wp_get_theme()->get('Version'));
 	// Enqueue theme stylesheet.
 	wp_enqueue_style('radiofrei-style');
 
 	wp_enqueue_script('topbar.min.js', get_theme_file_uri('/assets/js/topbar.min.js'), array(), '2.0.0', true);
 
 	wp_enqueue_script('jquery-ui-datepicker');
-	wp_enqueue_style('jquery-ui-datepicker-style', get_theme_file_uri('/assets/css/datepicker.css'));
+	wp_enqueue_style('jquery-ui-datepicker-style', get_theme_file_uri('/assets/css/datepicker.min.css'));
 	//wp_enqueue_style('jquery-ui-datepicker-style', 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.1/themes/base/jquery-ui.css');
 
-	wp_enqueue_script('rf-audioplayer', get_theme_file_uri('assets/js/rf-audioplayer.js'), array(), '1.0', true);
-	wp_enqueue_script('radiofrei-ajax', get_theme_file_uri('/assets/js/rf-ajax.js'), array('jquery', 'jquery-ui-datepicker'), '1.0', true);
+	wp_enqueue_script('rf-audioplayer', get_theme_file_uri('assets/js/rf-audioplayer.min.js'), array(), '1.0', true);
+	wp_enqueue_script('radiofrei-ajax', get_theme_file_uri('/assets/js/rf-ajax.min.js'), array('jquery', 'jquery-ui-datepicker'), '1.0', true);
 }
 add_action('wp_enqueue_scripts', 'radiofrei_scripts_styles');
 

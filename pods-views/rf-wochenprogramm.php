@@ -101,7 +101,7 @@ if (!empty($rows)) {
                                             ?>
                                         </td>
                                         <td style="border-left:none;width:58px;line-height:0;vertical-align:top;">
-                                            <a href="<?php echo $url; ?>"><img width="58" height="58" src="<?php echo $img; ?>" /></a>
+                                            <a href="<?php echo $url; ?>"><img class="rf-broadcast-image" width="58" height="58" src="<?php echo $img; ?>" /></a>
                                         </td>
                                     </tr>
                                 <?php

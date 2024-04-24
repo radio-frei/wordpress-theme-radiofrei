@@ -66,6 +66,7 @@
 
 
     function ajaxFetch(url, pushState) {
+
         // show progressbar
         topbar.show();
 
@@ -134,7 +135,7 @@
                 if (currentState && currentState.scrollPosition !== undefined) {
                     newMain.scrollTo(0, currentState.scrollPosition);
                 } else {
-                    //newMain.scrollTo(0, 0);
+                    newMain.scrollTo(0, 0);
                 }
 
                 // hide progressbar
@@ -175,13 +176,13 @@
             // Date Picker initialisieren
             jQuery(calendarButton).datepicker({
                 dateFormat: 'yy-mm-dd',
-                // showButtonPanel: true,
-                // changeMonth: true,
-                // changeYear: true,
+                showButtonPanel: true,
+                changeMonth: true,
+                changeYear: true,
                 showAnim: '',
                 onSelect: function (dateText) {
                     // val setzen, damit button nicht mit dateText beschriftet wird
-                    jQuery(calendarButton).val("Kalender");
+                    jQuery(calendarButton).val('Kalender');
                     // URL mit dem ausgewählten Datum aktualisieren und Seite neu laden
                     const url = window.location.origin + window.location.pathname + '?' + 'rfstart=' + dateText;
                     ajaxFetch(url, window.location.href !== url);
