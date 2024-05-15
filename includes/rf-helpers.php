@@ -48,6 +48,11 @@ function rf_get_weekday($date_time)
     return mysql2date('D, d.m.y', $date_time);
 }
 
+function rf_get_weekday_long($date_time)
+{
+    return mysql2date('l, d.m.y', $date_time);
+}
+
 function rf_val_date($date)
 {
     if (!empty($date)) {

@@ -94,7 +94,7 @@ footer {
     text-decoration: underline;
 }
 
-.rf-play-button {
+.rf-play-button, .rf-close-player-button, .rf-close-footer-button {
     cursor: pointer;
 }
 

@@ -2,36 +2,16 @@
 
 /**
  * Radio F.R.E.I. Sendeplanung
- * pods view für den pods-anzeigen-block des wochenprogramms
+ * pods view für den pods-anzeigen-block startseite mit der aktuellen sendung
  */
 
-$rfstart = isset($_GET['rfstart']) ? $_GET['rfstart'] : '';
-
-if (!($date = date_create_immutable($rfstart, wp_timezone()))) {
-    $date = date_create_immutable('now', wp_timezone());
-}
-
-$monday = $date->modify('Monday this week');
-$sunday = $date->modify('Sunday this week');
-
 $params = array(
-    'select' => 't.start, t.name, t.permalink, t.bild',
-    'where'  => "DATE(t.start) BETWEEN DATE('" . $monday->format('Y-m-d') . "') AND DATE('" . $sunday->format('Y-m-d') . "')",
-    'limit'  => -1
+    'select' => 't.start, t.ende, t.name, t.permalink, t.bild',
+    'where'  => 't.start <= NOW() AND t.ende > NOW()',
+    'limit'  => 1
 );
 
 $rows = pods('sendetermin', $params)->data();
-
-?>
-
-<div class="wp-block-buttons is-horizontal is-content-justification-center is-layout-flex wp-block-buttons-is-layout-flex">
-    <div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="<?php echo get_permalink(); ?>?rfstart=<?php echo $monday->modify('-7 days')->format('Y-m-d'); ?>">❮</a></div>
-    <div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="<?php echo get_permalink(); ?>">Diese Woche</a></div>
-    <input type="image" id="rf-datepicker" class="wp-block-button__link wp-element-button" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' %3E%3Cpath fill='white' d='M7 11h2v2H7zm14-6v14c0 1.11-.89 2-2 2H5a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2h1V1h2v2h8V1h2v2h1a2 2 0 0 1 2 2M5 7h14V5H5zm14 12V9H5v10zm-4-6v-2h2v2zm-4 0v-2h2v2zm-4 2h2v2H7zm8 2v-2h2v2zm-4 0v-2h2v2z' /%3E%3C/svg%3E" style="outline: none;">
-    <div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="<?php echo get_permalink(); ?>?rfstart=<?php echo $monday->modify('+7 days')->format('Y-m-d'); ?>">❯</a></div>
-</div>
-
-<?php
 
 if (!empty($rows)) {
 
