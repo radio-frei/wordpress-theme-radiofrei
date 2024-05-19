@@ -170,3 +170,9 @@ footer {
 .rf-broadcast-image {
     /* filter: grayscale(100%); */
 }
+
+.rf-sendungen-a-z {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(315px, 1fr));
+    column-gap: 1.2rem;
+}

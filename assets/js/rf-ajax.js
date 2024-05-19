@@ -179,7 +179,7 @@
     window.rf_filterBroadcasts = function (event) {
         const filter = event.target;
         var filterValue = filter.value.toUpperCase();
-        var entries = document.querySelectorAll('.is-rf-sendereihe');
+        var entries = document.querySelectorAll('.rf-is-sendereihe');
         entries.forEach(function (entry) {
             var text = entry.querySelector('.rf-broadcast-title').textContent.toUpperCase();
             if (text.indexOf(filterValue) > -1) {
