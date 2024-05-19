@@ -14,7 +14,7 @@
         checkForDatePicker()
     });
 
-    // close burger menu & reenable scroll
+    // close burger menu schließen & scrollen wieder aktivieren
     function resetBurgerMenu() {
         const containers = document.querySelectorAll('.wp-block-navigation__responsive-container');
         containers.forEach(i => {
@@ -30,14 +30,35 @@
         document.body.setAttribute('overflow', '');
     }
 
-    // links mit ajax aufrufen außer downloads
+    // links mit ajax aufrufen außer downloads, ankerlinks und externe links
     document.addEventListener('click', (event) => {
-        const origin = event.target.closest('a[href^="' + document.location.origin + '"]');
-        // download links ohne ajax
-        if (origin && !origin.hasAttribute('download')) {
+        const origin = event.target.closest('a[href]');
+        if (origin) {
+            // keine download links
+            if (origin.hasAttribute('download')) {
+                return;
+            }
+            // keine ankerlinks
+            if (origin.hash && origin.pathname === window.location.pathname) {
+                return;
+            }
+            // relative in absolute links konvertieren
+            let url;
+            if (origin.href.startsWith('http')) {
+                url = origin.href;
+            } else {
+                let a = document.createElement('a');
+                a.href = origin.getAttribute('href');
+                url = a.href;
+            }
+            // keine externen links
+            if (!url.startsWith(document.location.origin)) {
+                return;
+            }
+            // Standard-Link-Klick verhindern
             event.preventDefault();
             resetBurgerMenu();
-            ajaxFetch(origin.href, window.location.href !== origin.href);
+            ajaxFetch(url, window.location.href !== url);
         }
     });
 
@@ -67,7 +88,7 @@
 
     function ajaxFetch(url, pushState) {
 
-        // show progressbar
+        // zeige progressbar
         topbar.show();
 
         fetch(url)
@@ -107,7 +128,7 @@
                 const oldMain = document.querySelector('main');
                 const newMain = newDocument.querySelector('main');
 
-                // save current scroll position
+                // aktuelle scroll position speichern
                 let oldScrollPosition = oldMain.scrollTop;
 
                 // footer player offen lassen wenn offen
@@ -125,12 +146,12 @@
 
                 // Link wurde aufgerufen, push history
                 if (pushState) {
-                    // save scroll position in state
+                    // scroll position in state sichern
                     history.replaceState({ url: window.location.href, scrollPosition: oldScrollPosition }, '');
                     history.pushState({ url: url }, '', url);
                 }
 
-                // Restore scroll position if stored in history state
+                // scroll position wiederherstellen wenn in history state gesichert
                 const currentState = history.state;
                 if (currentState && currentState.scrollPosition !== undefined) {
                     newMain.scrollTo(0, currentState.scrollPosition);
@@ -138,7 +159,7 @@
                     newMain.scrollTo(0, 0);
                 }
 
-                // hide progressbar
+                // progressbar ausblenden
                 topbar.hide();
 
             })
