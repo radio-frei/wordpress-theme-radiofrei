@@ -170,6 +170,10 @@
 
     }
 
+    // button an den anfang scrollen
+    document.querySelector('.rf-scroll-to-top').addEventListener('click', function (event) {
+        document.getElementById('anfang').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
 
     /*
      * Funktionen für spezifische Seiten
