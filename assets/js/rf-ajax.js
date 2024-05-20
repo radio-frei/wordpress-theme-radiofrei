@@ -11,7 +11,8 @@
 
     window.addEventListener('load', () => {
         history.replaceState({ url: window.location.href }, '', window.location.href);
-        checkForDatePicker()
+        checkScrollToTopButton();
+        checkForDatePicker();
     });
 
     // close burger menu schließen & scrollen wieder aktivieren
@@ -140,9 +141,11 @@
                 document.documentElement.replaceChild(newDocument.head, document.head);
                 oldMain.parentNode.replaceChild(newMain, oldMain);
 
-                // wenn kalender button auf seite, setup datepicker
-                checkForDatePicker()
+                // event listener 'zum Anfang' neu zuweisen
+                checkScrollToTopButton();
 
+                // wenn kalender button auf seite, setup datepicker
+                checkForDatePicker();
 
                 // Link wurde aufgerufen, push history
                 if (pushState) {
@@ -170,10 +173,12 @@
 
     }
 
-    // button an den anfang scrollen
-    document.querySelector('.rf-scroll-to-top').addEventListener('click', function (event) {
-        document.getElementById('anfang').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
+    // event listener für button 'zum anfang'
+    function checkScrollToTopButton() {
+        document.querySelector('.rf-scroll-to-top').addEventListener('click', function (event) {
+            document.querySelector('main').scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
 
     /*
      * Funktionen für spezifische Seiten
