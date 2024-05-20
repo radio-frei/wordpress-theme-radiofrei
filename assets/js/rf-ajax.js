@@ -175,7 +175,7 @@
 
     // event listener für button 'zum anfang'
     function checkScrollToTopButton() {
-        document.querySelector('.rf-scroll-to-top').addEventListener('click', function (event) {
+        document.querySelector('.rf-scroll-to-top-button').addEventListener('click', function (event) {
             document.querySelector('main').scrollTo({ top: 0, behavior: 'smooth' });
         });
     }

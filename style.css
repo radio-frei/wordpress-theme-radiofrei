@@ -70,6 +70,11 @@ footer {
     }
 }
 
+.rf-scroll-to-top-button {
+    background-color: black;
+    border-radius: .33rem;
+}
+
 .rf-disabled {
     pointer-events: none;
 }
@@ -86,19 +91,27 @@ footer {
     min-width: 32px;
 }
 
-.rf-play-title a, .rf-broadcast-title a {
+.rf-play-title a,
+.rf-broadcast-title a {
     text-decoration: none;
 }
 
-.rf-play-title a:hover, .rf-broadcast-title a:hover {
+.rf-play-title a:hover,
+.rf-broadcast-title a:hover {
     text-decoration: underline;
 }
 
-.rf-play-button, .rf-close-player-button, .rf-close-footer-button {
+.rf-play-button,
+.rf-close-player-button,
+.rf-close-footer-button,
+.rf-scroll-to-top-button {
     cursor: pointer;
 }
 
-.rf-play-button:hover, .rf-close-player-button:hover, .rf-close-footer-button:hover, .rf-download-button:hover {
+.rf-play-button:hover,
+.rf-close-player-button:hover,
+.rf-close-footer-button:hover,
+.rf-download-button:hover {
     -ms-transform: scale(1.05); /* IE 9 */
     -webkit-transform: scale(1.05); /* Safari 3-8 */
     transform: scale(1.05);
