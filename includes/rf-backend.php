@@ -122,7 +122,7 @@ function rf_pre_save_sendung($pieces, $is_new_item)
      * pods bugfix:
      * von gewählten sendeterminen evtl. schon bestehene beziehungen zu anderen sendungen entfernen, 
      * damit sendetermine immer nur eine sendung haben (pods kann one-to-many beziehungen nicht sicherstellen)
-     * das muss pre_save passsieren
+     * das muss pre_save passieren
      */
 
     $st_start = '';

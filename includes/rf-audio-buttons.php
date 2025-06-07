@@ -43,7 +43,7 @@ function rf_add_audio_data_to_button($block_content, $block)
         }
     } elseif (!is_admin() && !empty($block['attrs']['className']) && strpos($block['attrs']['className'], 'rf-live-button') !== false) {
         // TODO: get parameter from settings for live stream url
-        $live_src = 'https://streaming.fueralle.org/Radio-F.R.E.I';
+        $live_src = 'http://streaming.fueralle.org/Radio-F.R.E.I';
         $live_title = 'Radio F.R.E.I. Live';
         $live_url = get_home_url();
         $live_img = get_theme_file_uri('assets/images/live.webp');
